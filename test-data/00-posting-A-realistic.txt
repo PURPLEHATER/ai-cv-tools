@@ -1,0 +1,75 @@
+Senior Technical Artist — Real-Time Visualisation
+Volvia Interactive · Göteborg, Sweden · Hybrid (3 days on site)
+Full-time · Permanent · Posted 4 days ago · 27 applicants
+
+ABOUT US
+
+Volvia Interactive builds the real-time visual experiences behind some of
+the most recognisable vehicles on Nordic roads. From configurators that let
+a customer see their exact specification in showroom lighting, to the
+displays a driver looks at every day, our work sits where design,
+engineering and safety meet.
+
+We are eighty people across Göteborg and Malmö. We are employee-owned, we
+work in English, and we have shipped in this space for eleven years.
+
+THE ROLE
+
+You will join our real-time visualisation team of fourteen, reporting to
+the Design Technology Lead. This is a senior individual contributor role —
+you will own the shader and material pipeline end to end, and you will be
+the person the art team comes to when something needs to be automated,
+optimised or made possible.
+
+Day to day you will:
+
+· Own and evolve the shader and material pipeline in Unreal Engine
+· Build and maintain the Python tooling our artists rely on daily
+· Create procedural content systems in Houdini for environment and variant
+  generation
+· Work directly with engineering on frame budgets for embedded automotive
+  hardware, where the constraints are real and unforgiving
+· Maintain our USD-based interchange between modelling, lighting and
+  engineering
+· Contribute to functional safety documentation alongside our systems team
+
+WHAT WE ARE LOOKING FOR
+
+Essential:
+· Senior-level Unreal Engine experience in a production environment
+· Strong Python for pipeline and tooling work
+· Houdini for procedural content generation
+· Shader authoring in HLSL or an equivalent shading language
+· Practical USD pipeline experience
+· Maya
+· Familiarity with ISO 26262 or comparable functional safety standards
+
+Nice to have:
+· Automotive or simulation background
+· Experience optimising for embedded or mobile GPUs
+· Swedish language, though our working language is English
+
+We would also love someone who is:
+· A genuine team player who lifts the people around them
+· Comfortable with ambiguity and able to self-direct
+· A clear communicator across disciplines
+
+WHAT WE OFFER
+
+· Competitive salary, reviewed annually
+· 30 days holiday plus Swedish public holidays
+· Occupational pension (ITP1) and full parental leave top-up
+· Wellness allowance of 5,000 SEK per year
+· Hardware of your choosing
+· A four-day week in July
+
+HOW TO APPLY
+
+Send a CV and, if you have one, a reel or portfolio. We review on a rolling
+basis and aim to respond within a week. We interview in two stages: a
+conversation with the team, then a technical discussion built around your
+own past work — we do not set take-home tests.
+
+Volvia Interactive is an equal opportunity employer. We welcome applicants
+regardless of background, and we are happy to make adjustments to our
+process on request.

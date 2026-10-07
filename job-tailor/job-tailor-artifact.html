@@ -1,0 +1,3316 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
+
+  #jt {
+    --ink: #16212b;
+    --ink-soft: #55636f;
+    --ink-faint: #8a949e;
+    --paper: #f4f5f3;
+    --card: #ffffff;
+    --rule: #dde0dc;
+    --accent: #1a6b66;
+    --amber: #96650d;
+    --red: #9c3025;
+    --serif: 'Newsreader', Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+    line-height: 1.55;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    #jt {
+      --ink: #e8eae7;
+      --ink-soft: #a3aeb8;
+      --ink-faint: #78838d;
+      --paper: #131a21;
+      --card: #1b242c;
+      --rule: #2c3841;
+      --accent: #5cb8b1;
+      --amber: #d8a341;
+      --red: #e08376;
+    }
+  }
+
+  #jt * { box-sizing: border-box; }
+
+  #jt .masthead {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1rem;
+    margin-bottom: 1.75rem;
+  }
+  #jt h1 {
+    font-family: var(--serif);
+    font-size: 30px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+  #jt .masthead p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 52ch;
+  }
+  #jt .modes { display: flex; margin-top: 14px; }
+  #jt .mode-btn {
+    font-family: var(--sans); font-size: 12.5px; color: var(--ink-faint);
+    background: transparent; border: 1px solid var(--rule);
+    padding: 6px 13px; cursor: pointer; margin-left: -1px;
+  }
+  #jt .mode-btn:first-child { margin-left: 0; border-radius: 3px 0 0 3px; }
+  #jt .mode-btn:last-child { border-radius: 0 3px 3px 0; }
+  #jt .mode-btn.on {
+    color: var(--ink); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    position: relative; z-index: 1; font-weight: 500;
+  }
+  #jt .mode-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; z-index: 2; }
+
+  #jt #tpl-dropzone, #jt #cand-dropzone {
+    border: 1px dashed var(--rule); border-radius: 4px; background: var(--card);
+    transition: border-color .15s, background .15s;
+  }
+  #jt #tpl-dropzone.dragging, #jt #cand-dropzone.dragging {
+    border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--card));
+  }
+  #jt #cand-dropzone textarea { border: none; background: transparent; border-radius: 0; }
+  #jt #cand-dropzone textarea:focus { outline: none; }
+  #jt .tpl-empty { padding: 18px 14px; text-align: center; }
+  #jt .tpl-prompt { font-size: 13px; color: var(--ink-faint); margin: 0 0 10px; }
+  #jt #tpl-loaded { padding: 14px; }
+  #jt .tpl-name { font-size: 14px; font-weight: 500; margin: 0 0 4px; }
+  #jt .tpl-clear {
+    background: none; border: none; color: var(--ink-faint); font-size: 17px;
+    line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  #jt .tpl-clear:hover { color: var(--red); }
+  #jt .tpl-sections { font-size: 12px; color: var(--ink-faint); margin: 0; }
+
+  #jt .lang { display: flex; margin-top: 12px; }
+  #jt .lang-btn {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-faint);
+    background: transparent;
+    border: 1px solid var(--rule);
+    padding: 4px 12px;
+    cursor: pointer;
+    margin-left: -1px;
+  }
+  #jt .lang-btn:first-child { margin-left: 0; border-radius: 3px 0 0 3px; }
+  #jt .lang-btn:last-child { border-radius: 0 3px 3px 0; }
+  #jt .lang-btn.on {
+    color: var(--ink);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    position: relative; z-index: 1; font-weight: 500;
+  }
+  #jt .lang-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; z-index: 2; }
+
+  #jt label.field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+  #jt .field { margin-bottom: 1.1rem; }
+  #jt .hint { font-size: 12px; color: var(--ink-faint); font-weight: 400; }
+
+  #jt select {
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 10px 12px;
+  }
+  #jt select:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+
+  #jt textarea, #jt input[type="text"] {
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 10px 12px;
+    resize: vertical;
+  }
+  #jt textarea:focus, #jt input[type="text"]:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
+  }
+
+  #jt #dropzone {
+    border: 1px dashed var(--rule);
+    border-radius: 4px;
+    background: var(--card);
+    transition: border-color .15s, background .15s;
+  }
+  #jt #dropzone.dragging {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 7%, var(--card));
+  }
+  #jt #dropzone textarea {
+    border: none;
+    background: transparent;
+    border-radius: 0;
+  }
+  #jt #dropzone textarea:focus { outline: none; }
+  #jt .dz-foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 0 12px 10px;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  #jt .dz-foot button {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    /* 44px minimum tap target — a text link is too small to hit on a phone. */
+    min-height: 44px;
+    padding: 0 16px;
+    cursor: pointer;
+  }
+  #jt .dz-foot button:hover { border-color: var(--ink-faint); }
+  #jt .dz-foot button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  /* On touch devices the button leads; the hint follows it. */
+  @media (pointer: coarse) {
+    #jt .dz-foot { flex-direction: row-reverse; justify-content: flex-end; }
+  }
+
+  #jt .primary {
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    background: var(--ink);
+    border: none;
+    border-radius: 4px;
+    padding: 13px;
+    cursor: pointer;
+  }
+  @media (prefers-color-scheme: dark) {
+    #jt .primary { color: var(--paper); background: var(--accent); }
+  }
+  #jt .primary:disabled { opacity: .45; cursor: default; }
+  #jt .primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  #jt .privacy {
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: center;
+    margin: 9px 0 0;
+  }
+
+  #jt .cost {
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: center;
+    margin: 9px 0 0;
+  }
+  #jt .cost:empty { margin: 0; }
+
+  #jt .opts {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 12px 14px;
+    background: var(--card);
+  }
+  #jt .opts-head {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin: 0 0 8px;
+  }
+  #jt .opt {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 13.5px;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  #jt .opt input { margin: 0; flex: none; accent-color: var(--accent); }
+  #jt .opt-note { color: var(--ink-faint); }
+  #jt .cost-detail { margin-top: 10px; }
+  #jt .cost-detail > summary {
+    list-style: none; cursor: pointer;
+    font-size: 12px; color: var(--ink-faint);
+    text-align: center; padding: 4px 0;
+  }
+  #jt .cost-detail > summary::-webkit-details-marker { display: none; }
+  #jt .cost-detail > summary:hover { color: var(--ink); }
+  #jt .cost-detail > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #jt .cost-body {
+    border: 1px solid var(--rule); border-radius: 4px;
+    padding: 14px 16px; margin-top: 6px; background: var(--card);
+  }
+  #jt .cost-intro, #jt .cost-caveat {
+    font-size: 12.5px; color: var(--ink-soft); margin: 0 0 12px; line-height: 1.55;
+  }
+  #jt .cost-caveat { margin: 12px 0 0; color: var(--ink-faint); }
+  #jt .cost-sub { font-size: 12.5px; color: var(--ink-soft); margin: 14px 0 8px; }
+  #jt .cost-row {
+    display: flex; justify-content: space-between; gap: 12px;
+    font-size: 13px; padding: 5px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  #jt .cost-row:last-child { border-bottom: none; }
+  #jt .cost-row.on { color: var(--accent); font-weight: 500; }
+  #jt .cost-val { color: var(--ink-faint); white-space: nowrap; }
+  #jt .cost-row.on .cost-val { color: var(--accent); }
+
+  #jt .opt-cost {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+  #jt .opt-hint {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin: 9px 0 0;
+    max-width: 52ch;
+  }
+
+  #jt .warn {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--amber);
+    border-left: 2px solid var(--amber);
+    padding: 2px 0 2px 11px;
+    margin: 8px 0 0;
+    max-width: 56ch;
+  }
+
+  /* Progress stepper */
+  #jt #steps { margin-top: 1.5rem; display: none; }
+  #jt .elapsed {
+    font-family: var(--serif); font-size: 17px; color: var(--ink);
+    margin: 0; text-align: center;
+  }
+  #jt .elapsed-note {
+    font-size: 12.5px; color: var(--ink-faint);
+    margin: 5px 0 0; text-align: center;
+  }
+  #jt .step {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    padding: 5px 0;
+  }
+  #jt .step .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--rule); flex: none;
+    transform: translateY(-1px);
+  }
+  #jt .step.active { color: var(--ink); }
+  #jt .step.active .dot { background: var(--accent); }
+  #jt .step.done .dot { background: var(--accent); opacity: .4; }
+
+  /* Zones */
+  #jt .zone { margin-top: 2.25rem; }
+  #jt .zone-head {
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 6px;
+    margin-bottom: 0;
+  }
+
+  /* Accordion sections */
+  #jt details.sec {
+    border-bottom: 1px solid var(--rule);
+  }
+  #jt details.sec > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 13px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 500;
+  }
+  #jt details.sec > summary::-webkit-details-marker { display: none; }
+  #jt details.sec > summary::after {
+    content: '';
+    width: 7px; height: 7px;
+    border-right: 1.5px solid var(--ink-faint);
+    border-bottom: 1.5px solid var(--ink-faint);
+    transform: rotate(45deg) translateY(-2px);
+    flex: none;
+    transition: transform .15s;
+  }
+  #jt details.sec[open] > summary::after { transform: rotate(-135deg) translateY(-2px); }
+  #jt .sec-body {
+    padding: 0 2px 16px;
+    font-size: 14.5px;
+    line-height: 1.62;
+    white-space: pre-wrap;
+    max-width: 68ch;
+  }
+  #jt .sec-actions { display: flex; gap: 8px; padding: 0 2px 16px; flex-wrap: wrap; }
+  #jt .ghost {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 6px 11px;
+    cursor: pointer;
+  }
+  #jt .ghost:hover { border-color: var(--ink-faint); }
+  #jt .ghost:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  #jt .tpl-picker { padding: 0 2px 18px; }
+  #jt .tpl-row { display: flex; gap: 0; margin-bottom: 7px; }
+  #jt .tpl {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule);
+    padding: 6px 13px;
+    cursor: pointer;
+    margin-left: -1px;
+  }
+  #jt .tpl:first-child { margin-left: 0; border-radius: 3px 0 0 3px; }
+  #jt .tpl:last-child { border-radius: 0 3px 3px 0; }
+  #jt .tpl.on {
+    color: var(--ink);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+  }
+  #jt .tpl:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; z-index: 2; }
+  #jt .tpl-note {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin: 0 0 11px;
+    max-width: 46ch;
+  }
+
+  #jt .hcount { font-weight: 400; color: var(--ink-faint); letter-spacing: 0; }
+  #jt .hhint {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin: 9px 0 2px;
+    max-width: 56ch;
+  }
+
+  #jt .patterns-btn, #jt .export-btn { margin-top: 14px; min-height: 40px; }
+  #jt .export-btn { margin-left: 8px; }
+  #jt .sec-body.editable {
+    outline: 1px dashed transparent;
+    border-radius: 3px;
+    padding: 4px 6px;
+    margin-left: -6px;
+    transition: outline-color .15s, background .15s;
+  }
+  #jt .sec-body.editable:hover { outline-color: var(--rule); }
+  #jt .sec-body.editable:focus {
+    outline: 1px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 4%, transparent);
+  }
+  #jt .edited-flag {
+    font-family: var(--sans); font-size: 11px; font-weight: 400;
+    color: var(--ink-faint); margin-left: 8px;
+  }
+
+  #jt .uniform-warn {
+    font-size: 12.5px; color: var(--amber);
+    border-left: 2px solid var(--amber);
+    padding: 3px 0 3px 12px; margin: 10px 2px 14px;
+    max-width: 60ch; line-height: 1.55;
+  }
+
+  #jt .parse-warn {
+    font-size: 13px; color: var(--amber);
+    border-left: 2px solid var(--amber);
+    padding: 4px 0 4px 14px; margin: 1.5rem 0 0;
+    max-width: 62ch; line-height: 1.55;
+  }
+
+  #jt .enhance { padding: 4px 2px 16px; border-top: 1px solid var(--rule); margin-top: 4px; }
+  #jt .enhance-toggle {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13.5px; padding: 12px 0 4px; cursor: pointer;
+  }
+  #jt .enhance-toggle input { margin: 0; flex: none; accent-color: var(--accent); }
+  #jt .enhance-panel { padding: 6px 0 0 24px; }
+  #jt .enhance-lead { font-size: 12.5px; color: var(--ink-faint); margin: 0 0 12px; max-width: 58ch; line-height: 1.55; }
+  #jt .enhance-pos {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 13.5px; margin-bottom: 6px; cursor: pointer;
+  }
+  #jt .enhance-pos input { margin: 0; flex: none; accent-color: var(--accent); }
+  #jt .enhance-btn { margin-top: 14px; }
+  #jt .enhance-note { font-size: 12px; color: var(--ink-faint); margin: 8px 0 0; max-width: 56ch; line-height: 1.5; }
+  #jt .enhance-status { font-size: 13px; line-height: 1.6; margin: 12px 0 0; max-width: 62ch; }
+  #jt .score-stale { font-size: 12.5px; color: var(--amber); margin: 0 2px 14px; max-width: 58ch; }
+
+  #jt .gap-claim { padding: 4px 2px 16px; }
+  #jt .gap-lead { font-size: 12.5px; color: var(--ink-faint); margin: 0 0 10px; max-width: 52ch; }
+  #jt .gap-row { margin-bottom: 8px; }
+  #jt .gap-chip {
+    font-family: var(--sans); font-size: 12.5px; color: var(--ink);
+    background: transparent; border: 1px solid var(--rule);
+    border-radius: 20px; padding: 6px 13px; cursor: pointer; min-height: 34px;
+  }
+  #jt .gap-chip:hover { border-color: var(--ink-faint); }
+  #jt .gap-chip.on {
+    border-color: var(--accent); color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent); font-weight: 500;
+  }
+  #jt .gap-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  #jt .gap-picker { padding: 10px 0 4px 6px; }
+  #jt .gap-q { font-size: 12px; color: var(--ink-faint); margin: 0 0 6px; }
+  #jt .gap-pos {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 13.5px; margin-bottom: 5px; cursor: pointer;
+  }
+  #jt .gap-pos input { margin: 0; flex: none; accent-color: var(--accent); }
+  #jt .gap-apply { margin-top: 10px; min-height: 38px; }
+  #jt .gap-status { font-size: 12.5px; margin: 8px 0 0; }
+
+  #jt .ask-lead { font-size: 12.5px; color: var(--ink-faint); margin: 12px 0 12px; max-width: 60ch; }
+  #jt .ask-thread { margin-bottom: 12px; }
+  #jt .ask-item { border-bottom: 1px solid var(--rule); padding: 10px 2px; }
+  #jt .ask-q { font-size: 13.5px; font-weight: 500; margin: 0 0 6px; }
+  #jt .ask-a { font-size: 13.5px; line-height: 1.6; margin: 0; white-space: pre-wrap; max-width: 66ch; }
+  #jt .ask-row { display: flex; gap: 8px; }
+  #jt .ask-input {
+    flex: 1; min-width: 0; font-family: var(--sans); font-size: 14px;
+    padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px;
+    background: var(--card); color: var(--ink);
+  }
+  #jt .ask-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  #jt .ask-send { flex: none; min-height: 42px; }
+  #jt .ask-suggestions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  #jt .ask-chip {
+    font-family: var(--sans); font-size: 12px; color: var(--ink-soft);
+    background: transparent; border: 1px solid var(--rule);
+    border-radius: 20px; padding: 5px 11px; cursor: pointer;
+  }
+  #jt .ask-chip:hover { border-color: var(--ink-faint); color: var(--ink); }
+  #jt .ask-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  #jt .conf-sec > summary { color: var(--amber); }
+  #jt .conf-sec .sec-body { color: var(--ink-soft); }
+  #jt .patterns-wait {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin: 14px 0 0;
+  }
+  #jt .statstrip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 26px;
+    padding: 16px 2px 6px;
+  }
+  #jt .statcell { min-width: 74px; }
+  #jt .statnum {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--accent);
+  }
+  #jt .statlabel {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 4px;
+  }
+  #jt .hpractice {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: none;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 4px 2px;
+    min-height: 44px;
+  }
+  #jt .hpractice input { margin: 0; accent-color: var(--accent); }
+  #jt .hpractice:hover { color: var(--ink); }
+  #jt .hrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  #jt .hmain {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    background: none;
+    border: none;
+    padding: 11px 2px;
+    font-family: var(--sans);
+    text-align: left;
+    cursor: pointer;
+    min-width: 0;
+  }
+  #jt .hmain:hover .htitle { color: var(--accent); }
+  #jt .hmain:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  #jt .htitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  #jt .hmeta { font-size: 12px; color: var(--ink-faint); }
+  #jt .hstatus {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: .01em;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 3px 10px;
+    cursor: pointer;
+    flex: none;
+    white-space: nowrap;
+  }
+  #jt .hstatus.s-applied { color: var(--accent); border-color: var(--accent); }
+  #jt .hstatus.s-interviewing {
+    color: var(--amber); border-color: var(--amber); font-weight: 500;
+  }
+  #jt .hstatus.s-closed { color: var(--ink-faint); opacity: .7; }
+  #jt .hstatus:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  #jt .hdel {
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    padding: 4px 6px;
+    cursor: pointer;
+    flex: none;
+  }
+  #jt .hdel:hover { color: var(--red); }
+  #jt .hdel:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  #jt .reopened {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    border-left: 2px solid var(--rule);
+    padding: 3px 0 3px 14px;
+    margin: 1.5rem 0 0;
+    max-width: 60ch;
+  }
+
+  /* Role confirmation */
+  #jt .role-check {
+    border-left: 2px solid var(--accent);
+    padding: 2px 0 2px 14px;
+    margin: 1.5rem 0 0;
+  }
+  #jt .role-check .rc-role {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.35;
+    margin: 0 0 4px;
+  }
+  #jt .role-check .rc-note { font-size: 12.5px; color: var(--ink-faint); margin: 0; }
+  #jt .role-check .rc-lang {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: 0 0 5px;
+  }
+
+  /* Match score — the one bold element */
+  #jt .score-block { padding: 18px 2px 20px; }
+  #jt .score-row { display: flex; align-items: baseline; gap: 12px; }
+  #jt .score-num {
+    font-family: var(--serif);
+    font-size: 62px;
+    line-height: .85;
+    font-weight: 500;
+    letter-spacing: -.02em;
+  }
+  #jt .score-cap { font-size: 13px; color: var(--ink-soft); max-width: 22ch; }
+  #jt .meter { display: flex; gap: 3px; margin: 14px 0 12px; }
+  #jt .meter i {
+    height: 5px; flex: 1; border-radius: 1px;
+    background: var(--rule);
+  }
+  #jt .meter i.on { background: currentColor; }
+  #jt .score-detail { font-size: 14px; line-height: 1.6; white-space: pre-wrap; max-width: 68ch; }
+
+  #jt .msg { font-size: 13.5px; margin: 10px 0 0; }
+  #jt .msg.err { color: var(--red); }
+
+  #jt .qcard { border-bottom: 1px solid var(--rule); padding: 15px 2px; }
+  #jt .qtext { font-size: 14.5px; font-weight: 500; margin: 0 0 9px; max-width: 62ch; }
+  #jt .qcard textarea { font-size: 14px; }
+  #jt .fb { font-size: 13.5px; line-height: 1.6; margin-top: 10px; white-space: pre-wrap; display: none; max-width: 66ch; }
+  #jt .fb .score-line { font-weight: 600; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #jt *, #jt *::after { transition: none !important; }
+  }
+</style>
+
+<div id="jt">
+
+  <div class="masthead">
+    <h1 id="t-title">Job tailor</h1>
+    <p id="t-sub">Save your CV once. For each role, get application materials and an honest read on whether it's worth your time.</p>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" class="lang-btn on" id="lang-en" aria-pressed="true">English</button>
+      <button type="button" class="lang-btn" id="lang-sv" aria-pressed="false">Svenska</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="cv"><span id="t-cvlabel">Your CV</span> <span class="hint" id="cv-saved"></span></label>
+    <div id="dropzone">
+      <textarea id="cv" rows="7"></textarea>
+      <div class="dz-foot">
+        <span id="dz-hint">PDF or .docx</span>
+        <button type="button" id="pick-file">Choose a file</button>
+        <!-- No `accept` filter: iOS greys out .docx and cloud-stored files when
+             a MIME list is present. File type is validated in JS instead. -->
+        <input id="cv-file" type="file" style="display:none;" />
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="company" id="t-company">Company</label>
+    <input id="company" type="text" />
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="location"><span id="t-location">Location</span> <span class="hint" id="t-locationnote">— sharpens the salary estimate</span></label>
+    <input id="location" type="text" />
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="posting" id="t-posting">The job posting</label>
+    <textarea id="posting" rows="7"></textarea>
+    <p id="posting-warn" class="warn" style="display:none;"></p>
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="outlang" id="t-outlang">Write my application in</label>
+    <select id="outlang">
+      <option value="auto" id="t-outauto">The same language as the posting</option>
+      <option value="en" id="t-outen">English</option>
+      <option value="sv" id="t-outsv">Swedish</option>
+    </select>
+    <p class="opt-hint" id="t-outhint">Matching the posting usually scores better with applicant tracking systems.</p>
+  </div>
+
+  <div class="field opts">
+    <p class="opts-head" id="t-include">Include</p>
+    <label class="opt"><input type="checkbox" id="opt-research" /> <span><span id="t-optresearch">Company research</span> <span class="opt-note" id="t-optresearchnote">— employee sentiment, financials</span> <span class="opt-cost" id="cost-research"></span></span></label>
+    <label class="opt"><input type="checkbox" id="opt-salary" /> <span><span id="t-optsalary">Pay estimate</span> <span class="opt-note" id="t-optsalarynote">— market range and talking points</span> <span class="opt-cost" id="cost-salary"></span></span></label>
+    <p class="opt-hint" id="t-opthint">Both use web search, which is most of the cost. Turn them off for a company you already know.</p>
+  </div>
+
+  <p id="error" class="msg err" style="display:none;"></p>
+
+  <button id="go" class="primary">Prepare my application</button>
+  <p id="cost" class="cost"></p>
+  <details id="cost-detail" class="cost-detail">
+    <summary id="t-costsummary">What does a run actually cost me?</summary>
+    <div class="cost-body">
+      <p id="t-costintro" class="cost-intro"></p>
+      <div id="cost-compare" class="cost-compare"></div>
+      <p id="t-costplans" class="cost-sub"></p>
+      <div id="cost-plans" class="cost-plans"></div>
+      <p id="t-costcaveat" class="cost-caveat"></p>
+    </div>
+  </details>
+  <p class="privacy" id="t-privacy">Files are read on your device. Nothing is stored on a server.</p>
+
+  <div id="steps">
+    <p id="elapsed-label" class="elapsed"></p>
+    <p id="elapsed-note" class="elapsed-note"></p>
+  </div>
+
+  <div id="history-wrap" style="display:none;">
+    <div class="zone">
+      <p class="zone-head"><span id="t-history">Your applications</span> <span id="history-count" class="hcount"></span></p>
+      <p id="history-hint" class="hhint"></p>
+      <div id="history-list"></div>
+      <div id="patterns-bar"></div>
+    </div>
+  </div>
+
+  <div id="role-check-slot"></div>
+  <div id="zone-materials"></div>
+  <div id="zone-intel"></div>
+  <div id="zone-portfolio"></div>
+  <div id="zone-practice"></div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  if (window.pdfjsLib) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var cvEl = $('cv'), companyEl = $('company'), locationEl = $('location'), postingEl = $('posting');
+  var dropzone = $('dropzone'), dzHint = $('dz-hint'), fileInput = $('cv-file'), pickBtn = $('pick-file');
+  var goBtn = $('go'), errorEl = $('error'), savedTag = $('cv-saved'), stepsEl = $('steps');
+  var roleSlot = $('role-check-slot'), zoneMaterials = $('zone-materials'), zoneIntel = $('zone-intel'), zonePractice = $('zone-practice');
+  var historyWrap = $('history-wrap'), historyList = $('history-list'), historyCount = $('history-count');
+  var historyHint = $('history-hint');
+  var patternsBar = $('patterns-bar'), zonePortfolio = $('zone-portfolio');
+  var optResearch = $('opt-research'), optSalary = $('opt-salary'), costEl = $('cost');
+  var postingWarn = $('posting-warn');
+  var langEn = $('lang-en'), langSv = $('lang-sv');
+  var outLangEl = $('outlang');
+
+  var currentCv = '', currentCompany = '', currentPosting = '', currentLocation = '';
+  var stepTimers = [];
+
+  if (window.storage) {
+    window.storage.get('base-cv', false).then(function (r) {
+      if (r && r.value) { cvEl.value = r.value; savedTag.textContent = T().saved; }
+    }).catch(function () {});
+  }
+
+  var saveTimer;
+  cvEl.addEventListener('input', function () {
+    if (!window.storage) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      window.storage.set('base-cv', cvEl.value, false).then(function () {
+        savedTag.textContent = T().saved;
+      }).catch(function () {});
+    }, 800);
+  });
+
+  function showError(msg) { errorEl.textContent = msg; errorEl.style.display = 'block'; }
+  function clearError() { errorEl.style.display = 'none'; }
+  function setHint(msg, isErr) {
+    dzHint.textContent = msg;
+    dzHint.style.color = isErr ? 'var(--red)' : 'var(--ink-faint)';
+  }
+  function resetHint() { setHint(T().dzhint, false); }
+
+  // ---------- Progress stepper ----------
+  // The old version advanced through named stages on fixed timers, which meant
+  // it claimed to be doing things it might already have finished, and sat on
+  // the last stage looking stuck when a run went long. There is no real
+  // progress signal available from a single API call, so this reports the only
+  // honest thing it knows: how long it has been waiting.
+  var elapsedTimer = null;
+
+  function startSteps() {
+    stepsEl.style.display = 'block';
+    var started = Date.now();
+    var label = $('elapsed-label');
+    var note = $('elapsed-note');
+    if (note) note.textContent = T().waitNote;
+
+    var tick = function () {
+      var secs = Math.floor((Date.now() - started) / 1000);
+      var mins = Math.floor(secs / 60);
+      var rem = secs % 60;
+      var clock = mins > 0 ? mins + ':' + (rem < 10 ? '0' : '') + rem : secs + 's';
+      if (label) label.textContent = T().working + ' ' + clock;
+      // Past a minute, say so rather than leaving them wondering.
+      if (secs === 75 && note) note.textContent = T().waitLong;
+    };
+    tick();
+    elapsedTimer = setInterval(tick, 1000);
+  }
+
+  function stopSteps() {
+    if (elapsedTimer) { clearInterval(elapsedTimer); elapsedTimer = null; }
+    stepsEl.style.display = 'none';
+  }
+
+  // ---------- File parsing ----------
+  function extractPdfText(buf) {
+    return window.pdfjsLib.getDocument({ data: buf }).promise.then(function (pdf) {
+      var jobs = [];
+      for (var i = 1; i <= pdf.numPages; i++) {
+        jobs.push(pdf.getPage(i).then(function (page) {
+          return page.getTextContent().then(function (c) {
+            return c.items.map(function (it) { return it.str; }).join(' ');
+          });
+        }));
+      }
+      return Promise.all(jobs).then(function (pages) { return pages.join('\n\n'); });
+    });
+  }
+  function extractDocxText(buf) {
+    return window.mammoth.extractRawText({ arrayBuffer: buf }).then(function (r) { return r.value; });
+  }
+  function handleFile(file) {
+    if (!file) return;
+    var n = (file.name || '').toLowerCase();
+    var isPdf = n.endsWith('.pdf') || file.type === 'application/pdf';
+    var isDocx = n.endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    if (!isPdf && !isDocx) {
+      setHint(T().fileWrongType, true);
+      setTimeout(resetHint, 4000); return;
+    }
+    setHint(T().fileReading(file.name), false);
+    var reader = new FileReader();
+    reader.onload = function () {
+      (isPdf ? extractPdfText(reader.result) : extractDocxText(reader.result)).then(function (text) {
+        text = (text || '').trim();
+        if (!text) {
+          setHint(T().fileNoText, true);
+          setTimeout(resetHint, 5000); return;
+        }
+        cvEl.value = text;
+        if (window.storage) {
+          window.storage.set('base-cv', text, false).then(function () { savedTag.textContent = T().saved; }).catch(function () {});
+        }
+        setHint(T().fileLoaded(file.name), false);
+        setTimeout(resetHint, 4000);
+      }).catch(function (e) {
+        console.error(e);
+        setHint(T().fileFail, true);
+        setTimeout(resetHint, 5000);
+      });
+    };
+    reader.onerror = function () {
+      setHint(T().fileFail, true);
+      setTimeout(resetHint, 5000);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+  pickBtn.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
+    fileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    dropzone.addEventListener(ev, function (e) {
+      e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragging');
+    });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    dropzone.addEventListener(ev, function (e) {
+      e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('dragging');
+    });
+  });
+  dropzone.addEventListener('drop', function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files;
+    if (f && f[0]) handleFile(f[0]);
+  });
+
+  // ---------- Parsing ----------
+  // Headers the model has been seen to translate despite being told not to.
+  // Mapping them back is cheaper and more reliable than hoping it complies:
+  // when parsing fails the whole package silently loses its role and score.
+  var HEADER_ALIASES = {
+    'ROLE CONFIRMATION': ['ROLLBEKRÄFTELSE', 'BEKRÄFTELSE AV ROLL', 'TJÄNSTEBEKRÄFTELSE'],
+    'TAILORED CV': ['ANPASSAT CV', 'SKRÄDDARSYTT CV'],
+    'COVER LETTER': ['PERSONLIGT BREV', 'FÖLJEBREV'],
+    'ATS MATCH SCORE': ['ATS-MATCHNING', 'MATCHNINGSPOÄNG', 'NYCKELORDSMATCHNING'],
+    'SKILLS GAP': ['KOMPETENSLUCKOR', 'KOMPETENSGAP', 'LUCKOR'],
+    'TONE CHECK': ['TONKONTROLL', 'SPRÅKKONTROLL'],
+    'POSITIONS': ['TJÄNSTER', 'ROLLER', 'BEFATTNINGAR'],
+    'CONFIDENCE': ['OSÄKERHET', 'TILLFÖRLITLIGHET', 'SÄKERHET'],
+    'INTERVIEW TIPS': ['INTERVJUTIPS', 'TIPS INFÖR INTERVJUN'],
+    'COMPANY RED FLAGS': ['VARNINGSSIGNALER', 'RÖDA FLAGGOR'],
+    'COMPANY FINANCIALS': ['FÖRETAGETS EKONOMI', 'EKONOMI'],
+    'SALARY': ['LÖN', 'LÖNENIVÅ', 'LÖNEUPPSKATTNING'],
+    'INTERVIEW QUESTIONS': ['INTERVJUFRÅGOR', 'FRÅGOR']
+  };
+
+  function parseSections(text, sectionKeys) {
+    var parts = {}, map = {};
+    sectionKeys.forEach(function (k) {
+      parts[k] = '';
+      map[k.toLowerCase()] = k;
+      (HEADER_ALIASES[k] || []).forEach(function (alias) { map[alias.toLowerCase()] = k; });
+    });
+    // Match against every recognised spelling, longest first so a longer alias
+    // is not shadowed by a shorter one contained within it. sectionKeys itself
+    // stays untouched — the caller's keys are what the result is keyed by.
+    var matchable = Object.keys(map).sort(function (a, b) { return b.length - a.length; });
+    var escaped = matchable.map(function (k) { return k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
+    // Anchored to line start, and the header must be the whole line or be
+    // followed by a separator. Without that last part, body copy beginning
+    // with a section word is mistaken for a header: a CONFIDENCE section
+    // opening "Salary data came from two sources" was being swallowed by the
+    // SALARY key.
+    var pattern = new RegExp('^\\s*(' + escaped.join('|') + ')\\s*(?:[:\\-\u2013]\\s*|$)', 'gim');
+    var chunks = text.split(pattern).filter(Boolean);
+    var current = null;
+    for (var i = 0; i < chunks.length; i++) {
+      var c = chunks[i], key = map[c.trim().toLowerCase()];
+      if (key) current = key;
+      else if (current) parts[current] += c;
+    }
+    sectionKeys.forEach(function (k) { parts[k] = parts[k].trim(); });
+    return parts;
+  }
+  function parseQuestions(block) {
+    return block.split(/\n/).map(function (l) {
+      return l.replace(/^\s*\d+[\.\)]\s*/, '').trim();
+    }).filter(function (l) { return l.length > 2; });
+  }
+  window.__jobTailorInternal = { parseSections: parseSections, parseQuestions: parseQuestions };
+
+  // ---------- Rendering ----------
+  function makeSection(title, body, opts) {
+    opts = opts || {};
+    var d = document.createElement('details');
+    d.className = 'sec';
+    if (opts.open) d.open = true;
+
+    var s = document.createElement('summary');
+    s.textContent = title;
+    d.appendChild(s);
+
+    var b = document.createElement('div');
+    b.className = 'sec-body';
+    b.textContent = body;
+    d.appendChild(b);
+
+    // Editable sections keep their current text in `body` via getText(), so
+    // Copy and the PDF export always use what is on screen rather than the
+    // original generation. Without this, one small edit meant abandoning the
+    // templates and finishing the job in Word.
+    var getText = function () { return body; };
+    if (opts.editable) {
+      b.setAttribute('contenteditable', 'plaintext-only');
+      b.setAttribute('spellcheck', 'true');
+      b.classList.add('editable');
+      b.setAttribute('aria-label', T().editableHint);
+      getText = function () { return b.innerText.replace(/\u00a0/g, ' '); };
+      var edited = false;
+      b.addEventListener('input', function () {
+        if (!edited) {
+          edited = true;
+          var flag = document.createElement('span');
+          flag.className = 'edited-flag';
+          flag.textContent = T().edited;
+          s.appendChild(flag);
+        }
+      });
+    }
+
+    var actions = document.createElement('div');
+    actions.className = 'sec-actions';
+
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'ghost';
+    copyBtn.textContent = T().copy;
+    copyBtn.addEventListener('click', function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(getText()).then(function () {
+          copyBtn.textContent = T().copied;
+          setTimeout(function () { copyBtn.textContent = T().copy; }, 1600);
+        }).catch(function () { copyBtn.textContent = T().copyFail; });
+      } else {
+        copyBtn.textContent = T().copyFail;
+      }
+    });
+    actions.appendChild(copyBtn);
+
+    if (opts.pdf && !opts.templates) {
+      var pdfBtn = document.createElement('button');
+      pdfBtn.className = 'ghost';
+      pdfBtn.textContent = T().downloadPdf;
+      pdfBtn.addEventListener('click', function () { downloadPdf(getText(), opts.pdf); });
+      actions.appendChild(pdfBtn);
+    }
+    d.appendChild(actions);
+
+    if (opts.pdf && opts.templates) {
+      var picker = document.createElement('div');
+      picker.className = 'tpl-picker';
+
+      var chosen = 'modern';
+      var noteEl = document.createElement('p');
+      noteEl.className = 'tpl-note';
+
+      var row = document.createElement('div');
+      row.className = 'tpl-row';
+
+      Object.keys(TEMPLATES).forEach(function (key) {
+        var t = TEMPLATES[key];
+        var b = document.createElement('button');
+        b.className = 'tpl' + (key === chosen ? ' on' : '');
+        b.type = 'button';
+        b.textContent = T()[t.labelKey];
+        b.setAttribute('aria-pressed', key === chosen ? 'true' : 'false');
+        b.addEventListener('click', function () {
+          chosen = key;
+          row.querySelectorAll('.tpl').forEach(function (o) {
+            o.classList.remove('on');
+            o.setAttribute('aria-pressed', 'false');
+          });
+          b.classList.add('on');
+          b.setAttribute('aria-pressed', 'true');
+          noteEl.textContent = T()[t.noteKey];
+        });
+        row.appendChild(b);
+      });
+
+      noteEl.textContent = T()[TEMPLATES[chosen].noteKey];
+
+      var dl = document.createElement('button');
+      dl.className = 'ghost';
+      dl.textContent = T().downloadPdf;
+      dl.addEventListener('click', function () { downloadPdf(getText(), opts.pdf, chosen); });
+
+      picker.appendChild(row);
+      picker.appendChild(noteEl);
+      picker.appendChild(dl);
+      d.appendChild(picker);
+    }
+
+    return d;
+  }
+
+  function makeZone(label) {
+    var wrap = document.createElement('div');
+    wrap.className = 'zone';
+    var h = document.createElement('p');
+    h.className = 'zone-head';
+    h.textContent = label;
+    wrap.appendChild(h);
+    return wrap;
+  }
+
+  // Named so it can be tested directly rather than reimplemented.
+  function scoreFromText(raw) {
+    var m = String(raw == null ? '' : raw).match(/(\d{1,3})\s*%/);
+    return m ? Math.max(0, Math.min(100, parseInt(m[1], 10))) : null;
+  }
+
+  function makeScoreBlock(raw) {
+    var pct = scoreFromText(raw);
+    var wrap = document.createElement('div');
+    wrap.className = 'score-block';
+
+    if (pct !== null) {
+      var tone = pct >= 75 ? 'var(--accent)' : pct >= 50 ? 'var(--amber)' : 'var(--red)';
+      var caption = pct >= 75 ? 'Strong keyword overlap with this posting.'
+                  : pct >= 50 ? 'Partial overlap. Worth closing the gaps below.'
+                  : 'Weak overlap. Check the gaps before applying.';
+
+      var row = document.createElement('div');
+      row.className = 'score-row';
+      var num = document.createElement('div');
+      num.className = 'score-num';
+      num.style.color = tone;
+      num.textContent = pct + '%';
+      var cap = document.createElement('div');
+      cap.className = 'score-cap';
+      cap.textContent = caption;
+      row.appendChild(num); row.appendChild(cap);
+      wrap.appendChild(row);
+
+      var meter = document.createElement('div');
+      meter.className = 'meter';
+      meter.style.color = tone;
+      var lit = Math.round(pct / 5);
+      for (var i = 0; i < 20; i++) {
+        var seg = document.createElement('i');
+        if (i < lit) seg.className = 'on';
+        meter.appendChild(seg);
+      }
+      wrap.appendChild(meter);
+    }
+
+    var detail = document.createElement('div');
+    detail.className = 'score-detail';
+    detail.textContent = raw.replace(/^\s*\d{1,3}\s*%\s*/, '').trim();
+    wrap.appendChild(detail);
+    return wrap;
+  }
+
+  // ---------- CV structure parsing (for templated PDF output) ----------
+
+  var HEADING_WORDS = /^(professional\s+)?(summary|profile|objective|experience|work\s+experience|professional\s+experience|employment|employment\s+history|education|skills|technical\s+skills|core\s+competencies|competencies|certifications|licenses|projects|publications|awards|achievements|languages|interests|volunteer|references|contact|additional\s+information)\b/i;
+
+  function looksLikeHeading(line) {
+    var t = line.trim();
+    if (!t || t.length > 48) return false;
+    if (/[.!?]$/.test(t)) return false;
+    if (HEADING_WORDS.test(t)) return true;
+    // Short all-caps lines are headings, but only if they contain letters
+    // (guards against a line of dashes or numbers).
+    if (/[A-Za-z]/.test(t) && t === t.toUpperCase() && t.length <= 32) return true;
+    return false;
+  }
+
+  function looksLikeBullet(line) {
+    return /^\s*[-\u2022\u2013*\u00b7]\s+/.test(line);
+  }
+
+  function stripBullet(line) {
+    return line.replace(/^\s*[-\u2022\u2013*\u00b7]\s+/, '').trim();
+  }
+
+  function looksLikeContact(line) {
+    var t = line.trim();
+    if (!t || t.length > 120) return false;
+    return /@|\+\d|\(\d{3}\)|\bhttps?:\/\/|linkedin|github|\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b/i.test(t);
+  }
+
+  function parseCvStructure(text) {
+    var lines = String(text || '').split(/\r?\n/);
+    var name = '', contact = [], blocks = [];
+    var i = 0;
+
+    // First non-empty line is the name, unless it already looks like a heading.
+    while (i < lines.length && !lines[i].trim()) i++;
+    if (i < lines.length && !looksLikeHeading(lines[i]) && !looksLikeContact(lines[i])) {
+      name = lines[i].trim();
+      i++;
+    }
+
+    // Immediately following short non-heading lines are treated as contact info.
+    while (i < lines.length) {
+      var l = lines[i].trim();
+      if (!l) { i++; continue; }
+      if (looksLikeHeading(l)) break;
+      if (looksLikeContact(l) || (contact.length < 2 && l.length <= 90 && !looksLikeBullet(l))) {
+        contact.push(l);
+        i++;
+        continue;
+      }
+      break;
+    }
+
+    for (; i < lines.length; i++) {
+      var raw = lines[i];
+      var t = raw.trim();
+      if (!t) { blocks.push({ type: 'space' }); continue; }
+      if (looksLikeHeading(t)) blocks.push({ type: 'heading', text: t });
+      else if (looksLikeBullet(t)) blocks.push({ type: 'bullet', text: stripBullet(t) });
+      else blocks.push({ type: 'text', text: t });
+    }
+
+    // Collapse runs of blank lines.
+    var out = [], lastSpace = false;
+    blocks.forEach(function (b) {
+      if (b.type === 'space') { if (!lastSpace) out.push(b); lastSpace = true; }
+      else { out.push(b); lastSpace = false; }
+    });
+
+    return { name: name, contact: contact, blocks: out };
+  }
+
+  window.__jobTailorInternal.parseCvStructure = parseCvStructure;
+  window.__jobTailorInternal.looksLikeHeading = looksLikeHeading;
+
+  // ---------- PDF templates ----------
+
+  var TEMPLATES = {
+    classic: {
+      labelKey: 'tplClassic', noteKey: 'tplClassicNote',
+      font: 'times',
+      margin: 64,
+      nameSize: 20, nameAlign: 'center', nameStyle: 'normal',
+      contactSize: 9.5, contactAlign: 'center',
+      headingSize: 11.5, headingStyle: 'bold', headingCaps: true, headingRule: false,
+      bodySize: 10.5, lineHeight: 14, headingGapBefore: 15, headingGapAfter: 7
+    },
+    modern: {
+      labelKey: 'tplModern', noteKey: 'tplModernNote',
+      font: 'helvetica',
+      margin: 58,
+      nameSize: 22, nameAlign: 'left', nameStyle: 'bold',
+      contactSize: 9.5, contactAlign: 'left',
+      headingSize: 11, headingStyle: 'bold', headingCaps: true, headingRule: true,
+      bodySize: 10.5, lineHeight: 14.5, headingGapBefore: 17, headingGapAfter: 9
+    },
+    compact: {
+      labelKey: 'tplCompact', noteKey: 'tplCompactNote',
+      font: 'helvetica',
+      margin: 46,
+      nameSize: 17, nameAlign: 'left', nameStyle: 'bold',
+      contactSize: 8.5, contactAlign: 'left',
+      headingSize: 9.5, headingStyle: 'bold', headingCaps: true, headingRule: false,
+      bodySize: 9.5, lineHeight: 11.5, headingGapBefore: 10, headingGapAfter: 5
+    }
+  };
+
+  function renderCvPdf(doc, cv, tpl, pageW, pageH) {
+    var m = tpl.margin;
+    var maxW = pageW - m * 2;
+    var y = m;
+    var wrote = 0;
+
+    function ensureRoom(needed) {
+      if (y + needed > pageH - m) { doc.addPage(); y = m; return true; }
+      return false;
+    }
+
+    function put(text, size, style, align, gap) {
+      doc.setFont(tpl.font, style);
+      doc.setFontSize(size);
+      var lines = doc.splitTextToSize(text.length ? text : ' ', maxW);
+      if (!lines || !lines.length) lines = [' '];
+      lines.forEach(function (line) {
+        ensureRoom(gap);
+        var x = m;
+        if (align === 'center') x = pageW / 2;
+        doc.text(String(line), x, y, align === 'center' ? { align: 'center' } : undefined);
+        y += gap;
+        wrote++;
+      });
+    }
+
+    // Name
+    if (cv.name) {
+      put(cv.name, tpl.nameSize, tpl.nameStyle, tpl.nameAlign, tpl.nameSize + 6);
+      y += 2;
+    }
+
+    // Contact
+    if (cv.contact.length) {
+      cv.contact.forEach(function (c) {
+        put(c, tpl.contactSize, 'normal', tpl.contactAlign, tpl.contactSize + 3.5);
+      });
+      y += 6;
+    }
+
+    cv.blocks.forEach(function (b) {
+      if (b.type === 'space') { y += tpl.lineHeight * 0.45; return; }
+
+      if (b.type === 'heading') {
+        y += tpl.headingGapBefore;
+        var label = tpl.headingCaps ? b.text.toUpperCase() : b.text;
+        ensureRoom(tpl.headingSize + 4);
+        doc.setFont(tpl.font, tpl.headingStyle);
+        doc.setFontSize(tpl.headingSize);
+        doc.text(label, m, y);
+        wrote++;
+        y += 4;
+        if (tpl.headingRule) {
+          doc.setDrawColor(150);
+          doc.setLineWidth(0.5);
+          doc.line(m, y, pageW - m, y);
+        }
+        y += tpl.headingGapAfter;
+        return;
+      }
+
+      if (b.type === 'bullet') {
+        doc.setFont(tpl.font, 'normal');
+        doc.setFontSize(tpl.bodySize);
+        var indent = 12;
+        var lines = doc.splitTextToSize(b.text.length ? b.text : ' ', maxW - indent);
+        if (!lines || !lines.length) lines = [' '];
+        lines.forEach(function (line, idx) {
+          ensureRoom(tpl.lineHeight);
+          if (idx === 0) doc.text('\u2022', m, y);
+          doc.text(String(line), m + indent, y);
+          y += tpl.lineHeight;
+          wrote++;
+        });
+        return;
+      }
+
+      put(b.text, tpl.bodySize, 'normal', 'left', tpl.lineHeight);
+    });
+
+    return wrote;
+  }
+
+  function downloadPdf(text, filename, templateKey) {
+    var lib = window.jspdf && (window.jspdf.jsPDF || window.jspdf.default);
+    if (!lib) { showError(T().errPdfLib); return; }
+
+    var content = (text == null ? '' : String(text)).trim();
+    if (!content) { showError(T().errPdfEmpty); return; }
+
+    try {
+      var doc = new lib({ unit: 'pt', format: 'letter' });
+      var pw = doc.internal.pageSize.getWidth();
+      var ph = doc.internal.pageSize.getHeight();
+      var wrote = 0;
+
+      var tpl = TEMPLATES[templateKey];
+      if (tpl) {
+        wrote = renderCvPdf(doc, parseCvStructure(content), tpl, pw, ph);
+      } else {
+        // Plain flow, used for cover letters and anything without CV structure.
+        var margin = 56, maxW = pw - margin * 2, lh = 14, y = margin;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+        content.split(/\r?\n/).forEach(function (para) {
+          var lines = doc.splitTextToSize(para.length ? para : ' ', maxW);
+          if (!lines || !lines.length) lines = [' '];
+          lines.forEach(function (line) {
+            if (y > ph - margin) { doc.addPage(); y = margin; }
+            doc.text(String(line), margin, y);
+            y += lh;
+            wrote++;
+          });
+        });
+      }
+
+      if (!wrote) { showError(T().errPdfLayout); return; }
+
+      var blob = doc.output('blob');
+      if (!blob || !blob.size) { showError(T().errPdfLayout); return; }
+
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.rel = 'noopener';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+
+      setTimeout(function () {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 4000);
+    } catch (err) {
+      console.error('PDF export failed:', err);
+      showError(T().errPdfFail);
+    }
+  }
+
+  // ---------- API ----------
+  function callClaude(prompt, useSearch) {
+    var body = { model: 'claude-sonnet-4-6', max_tokens: 4000, messages: [{ role: 'user', content: prompt }] };
+    if (useSearch) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+    return fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      if (!data || !data.content) throw new Error('no content');
+      var t = data.content.map(function (b) { return b.type === 'text' ? b.text : ''; }).join('\n').trim();
+      if (!t) throw new Error('empty');
+      return t;
+    });
+  }
+
+  // ---------- Practice ----------
+  function renderPractice(prep, entry) {
+    var questions = (prep && prep.questions) ? prep.questions : (Array.isArray(prep) ? prep : []);
+    var tips = (prep && prep.tips) ? prep.tips : '';
+    // When practice is opened from a saved job, rate answers against that job's
+    // own posting and CV rather than whatever is currently in the form.
+    var ctxCv = currentCv, ctxPosting = currentPosting, ctxCompany = currentCompany;
+    if (entry) {
+      ctxCompany = entry.company || '';
+      if (entry._cv) ctxCv = entry._cv;
+      if (entry._posting) ctxPosting = entry._posting;
+    }
+    var zone = makeZone(T().zonePrep);
+
+    if (entry && (entry.role || entry.company)) {
+      var forWhich = document.createElement('p');
+      forWhich.style.cssText = 'font-size:12.5px;color:var(--ink-faint);margin:10px 0 0;';
+      forWhich.textContent = T().prepFor + ' ' + (entry.role || entry.company);
+      zone.appendChild(forWhich);
+    }
+
+    if (tips) zone.appendChild(makeSection(T().secTips, tips, { open: true }));
+
+    var lead = document.createElement('p');
+    lead.style.cssText = 'font-size:13px;color:var(--ink-soft);margin:18px 0 4px;max-width:60ch;';
+    lead.textContent = T().practiceLead;
+    zone.appendChild(lead);
+
+    questions.forEach(function (q, idx) {
+      var card = document.createElement('div');
+      card.className = 'qcard';
+      var qp = document.createElement('p');
+      qp.className = 'qtext';
+      qp.textContent = q;
+      card.appendChild(qp);
+
+      var ta = document.createElement('textarea');
+      ta.rows = 3;
+      ta.placeholder = T().answerPh;
+      card.appendChild(ta);
+
+      var fb = document.createElement('div');
+      fb.className = 'fb';
+      card.appendChild(fb);
+
+      ta.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' || e.shiftKey) return;
+        e.preventDefault();
+        var ans = ta.value.trim();
+        if (!ans) return;
+        ta.disabled = true;
+        fb.style.display = 'block';
+        fb.style.color = 'var(--ink-faint)';
+        fb.textContent = T().reading;
+
+        var p = 'A candidate is practising for a job interview.\n\nTheir CV:\n' + ctxCv +
+          '\n\nThe job posting:\n' + ctxPosting +
+          (ctxCompany ? '\n\nCompany: ' + ctxCompany : '') +
+          '\n\nQuestion: ' + q + '\n\nTheir answer: ' + ans +
+          '\n\nRate the answer out of 10. Check whether it has a clear situation, the action they took, and a concrete result \u2014 say so directly if a measurable outcome is missing. Then give 2-4 sentences: what worked, what to change, and one specific improvement. Begin with "Score: X/10" on its own line. Plain text, no markdown. Write your feedback in ' + langShort() + '.';
+
+        callClaude(p, false).then(function (t) {
+          ta.disabled = false;
+          fb.style.color = 'var(--ink)';
+          fb.textContent = t;
+        }).catch(function () {
+          ta.disabled = false;
+          fb.style.color = 'var(--red)';
+          fb.textContent = T().rateFail;
+        });
+      });
+      zone.appendChild(card);
+    });
+    zonePractice.appendChild(zone);
+  }
+
+  // ---------- Extras ----------
+  function addExtras() {
+    var zone = makeZone(T().zoneFollow);
+    var row = document.createElement('div');
+    row.className = 'sec-actions';
+    row.style.paddingTop = '14px';
+
+    var defs = [
+      { label: T().thankyou, title: T().thankyou, build: function () {
+        return 'Write a short post-interview thank-you email for this candidate.\n\nCV:\n' + currentCv +
+          '\n\nPosting:\n' + currentPosting + (currentCompany ? '\nCompany: ' + currentCompany : '') +
+          '\n\nUnder 150 words, warm but not effusive. Plain text, and no em dashes or en dashes as punctuation. The only placeholders allowed are [Interviewer name] and [something specific you discussed]. Write it in ' + langShort() + '.'; } },
+      { label: T().followup, title: T().followup, build: function () {
+        return 'Write a brief follow-up email checking on application status, about two weeks after applying with no reply.\n\nCV:\n' + currentCv +
+          '\n\nPosting:\n' + currentPosting + (currentCompany ? '\nCompany: ' + currentCompany : '') +
+          '\n\nUnder 120 words. Confident, not apologetic, not pushy. Plain text, and no em dashes or en dashes as punctuation. Write it in ' + langShort() + '.'; } }
+    ];
+
+    defs.forEach(function (d) {
+      var b = document.createElement('button');
+      b.className = 'ghost';
+      b.textContent = d.label;
+      b.addEventListener('click', function () {
+        b.disabled = true;
+        var note = document.createElement('p');
+        note.className = 'msg';
+        note.style.color = 'var(--ink-faint)';
+        note.textContent = T().writing + d.label.toLowerCase() + '\u2026';
+        zone.appendChild(note);
+        callClaude(d.build(), !!d.search).then(function (t) {
+          b.disabled = false;
+          note.remove();
+          zone.appendChild(makeSection(d.title, stripEmDashes(t.trim()), { open: true }));
+        }).catch(function () {
+          b.disabled = false;
+          note.className = 'msg err';
+          note.style.color = '';
+          note.textContent = T().extraFail;
+        });
+      });
+      row.appendChild(b);
+    });
+    zone.appendChild(row);
+    zonePractice.appendChild(zone);
+  }
+
+  // ---------- Language ----------
+
+  var STRINGS = {
+    en: {
+      title: 'Job tailor',
+      sub: 'Save your CV once. For each role, get application materials and an honest read on whether it\u2019s worth your time.',
+      cvlabel: 'Your CV',
+      cvph: 'Paste your CV, or drop a PDF or Word file here',
+      cvphTouch: 'Paste your CV, or attach a PDF or Word file',
+      dzhint: 'PDF or .docx',
+      pickfile: 'Choose a file',
+      pickfileTouch: 'Attach a file',
+      company: 'Company',
+      location: 'Location',
+      locationnote: '\u2014 sharpens the salary estimate',
+      posting: 'The job posting',
+      postingph: 'Paste the posting text, or a link to it',
+      include: 'Include',
+      optresearch: 'Company research',
+      optresearchnote: '\u2014 employee sentiment, financials',
+      optsalary: 'Pay estimate',
+      optsalarynote: '\u2014 market range and talking points',
+      optCost: function (t) { return '+' + t; },
+      costSummary: 'What does a run actually cost me?',
+      costIntro: 'Anthropic does not publish an exact allowance for any plan, so nobody can tell you a true percentage. What is certain is the relative cost \u2014 how much each option adds to a run.',
+      costBasic: 'CV, letter, match score, gaps',
+      costWithResearch: '+ company research',
+      costWithSalary: '+ pay estimate',
+      costWithBoth: '+ both',
+      costTimes: function (n) { return n + '\u00d7 a basic run'; },
+      costPlans: 'Very roughly, runs per five-hour window at the settings above:',
+      planFree: 'Free', planPro: 'Pro', planMax: 'Max 5x',
+      costRuns: function (r) { return r + ' runs'; },
+      costCaveat: 'These are estimates, not guarantees. Your limit is shared with everything else you do in Claude, so a busy afternoon of other work leaves less for this. Turning both options off roughly triples how many runs you get.',
+      opthint: 'Both use web search, which is most of the cost of a run. Leave them off for a company you already know.',
+      go: 'Prepare my application',
+      privacy: 'Files are read on your device. Nothing is stored on a server.',
+      working: 'Working\u2026',
+      waitNote: 'This usually takes under a minute.',
+      waitLong: 'Taking longer than usual. Still going \u2014 web research can be slow.',
+      history: 'Your applications',
+      saved: '\u2014 saved',
+      outlang: 'Write my application in',
+      outauto: 'The same language as the posting',
+      outen: 'English', outsv: 'Swedish',
+      outhint: 'Matching the posting usually scores better with applicant tracking systems.',
+      langLabel: 'Interface',
+      zoneMaterials: 'Your materials', zoneIntel: 'Before you apply',
+      zonePractice: 'Practice', zoneFollow: 'Follow-ups', zoneResult: 'Result',
+      secCv: 'Tailored CV', secLetter: 'Cover letter', secTone: 'Does it sound like you?',
+      secMatch: 'Keyword match', secGap: 'What you\u2019re missing', secPay: 'What it should pay',
+      secReviews: 'What employees say', secFinancials: 'How the company is doing',
+      secTips: 'Going in prepared', secFull: 'Full response',
+      copy: 'Copy', copied: 'Copied', copyFail: 'Copy failed', downloadPdf: 'Download PDF',
+      tplClassic: 'Classic', tplModern: 'Modern', tplCompact: 'Compact',
+      tplClassicNote: 'Serif, centred name \u2014 traditional and conservative.',
+      tplModernNote: 'Sans-serif, left-aligned, ruled section headings.',
+      tplCompactNote: 'Tighter spacing to fit more on one page.',
+      practiceLead: 'Answer any of these and press Enter. You\u2019ll get a score and specific notes on what to tighten.',
+      practiceLabel: 'Got an interview',
+      practiceTip: 'Tick this once you have an interview \u2014 it prepares tips and practice questions for this job',
+      practiceLoading: 'Preparing you for this interview\u2026',
+      practiceFail: 'Could not prepare this one. Try again.',
+      secConfidence: 'What I\u2019m unsure about here',
+      editableHint: 'Editable \u2014 click to change the text',
+      edited: 'edited',
+      gapLead: 'Do you actually have any of these? Tap one and say where you used it.',
+      gapWhere: 'Where did you use it?',
+      gapApply: function (n) { return n === 1 ? 'Add it to the CV' : 'Add ' + n + ' to the CV'; },
+      gapWorking: 'Rewriting the CV with what you added\u2026',
+      gapDone: 'Added. Check the CV above reads the way you would put it.',
+      gapFail: 'That did not go through. Try again.',
+      gapSaveBase: 'Add these to my saved CV too',
+      gapSavedBase: 'Added to your saved CV',
+      enhanceOpen: 'Go deeper on specific roles',
+      enhanceLead: 'Pick the roles most relevant to this job. Those get rewritten much harder \u2014 the posting\u2019s exact wording where your experience genuinely matches it, and detail the first pass underplayed. Everything else is left alone.',
+      enhanceGo: function (n) { return n === 1 ? 'Super enhance 1 role' : 'Super enhance ' + n + ' roles'; },
+      enhanceGoNone: 'Pick at least one role',
+      enhanceNote: 'Nothing is invented. If a requirement is missing from your CV, this cannot conjure it \u2014 it can only make what is genuinely there impossible to miss.',
+      enhanceWorking: 'Rewriting those roles\u2026',
+      enhanceDone: 'Rewritten. Read it through \u2014 you will have to defend every line of it.',
+      enhanceFail: 'That did not go through. Try again.',
+      scoreStale: 'This score describes the earlier version. See the note under the CV for where it stands now.',
+      parseFailed: 'The reply came back in an unexpected shape, so it could not be split into sections. The full text is below, but the match score, gaps and interview prep are missing from this run. Running it again usually fixes it.',
+      tooUniform: 'Every role here is about the same length, which reads as written by a machine. Pick the roles that matter for this job and use Super enhance on them, so the rest sit shorter by contrast.',
+      exportBtn: 'Export as CSV',
+      exportTip: 'Download your application log as a spreadsheet',
+      exportFail: 'Could not build the file. Try again.',
+      zonePatterns: 'Patterns across your applications',
+      patternsBtn: 'Look for patterns',
+      patternsLoading: 'Reading back through your applications\u2026',
+      patternsFail: 'Could not analyse your applications. Try again.',
+      patternsNeed: function (n) {
+        return n === 1 ? 'One more application and I can look for patterns across them.'
+                       : n + ' more applications and I can look for patterns across them.';
+      },
+      secRepeats: 'What keeps coming up',
+      secFit: 'Where you fit best',
+      secNext: 'What to do next',
+      statApplications: 'tracked', statAvgMatch: 'average match',
+      statApplied: 'applied', statInterviews: 'at interview',
+      zonePrep: 'Interview preparation',
+      prepFor: 'For:',
+      prepHint: 'Tick \u201cGot an interview\u201d on a job to prepare for it.',
+      answerPh: 'Your answer \u2014 Enter to submit, Shift+Enter for a new line',
+      reading: 'Reading your answer\u2026',
+      rateFail: 'That didn\u2019t go through. Press Enter to try again.',
+      thankyou: 'Thank-you email', followup: 'Follow-up email',
+      writing: 'Writing your ', extraFail: 'That didn\u2019t go through. Try again.',
+      roleNote: 'Not the job you meant? Stop here and run it again \u2014 don\u2019t use what\u2019s below.',
+      reopened: function (d) { return 'Saved run \u2014 ' + d + '. The company research and pay data were accurate then; re-run for a current picture.'; },
+      statuses: { 'not applied': 'not applied', 'applied': 'applied', 'interviewing': 'interviewing', 'closed': 'closed' },
+      statusTip: 'Click to change status', removeTip: 'Remove from history',
+      countOne: '1 application', countMany: function (n) { return n + ' applications'; },
+      errNoCv: 'Add your CV to get started.',
+      errNoPosting: 'Add the job posting \u2014 paste the text or a link.',
+      errRequest: 'That request didn\u2019t go through. Check your connection and try again.',
+      errPdfLib: 'The PDF library didn\u2019t load. Reload the page and try again.',
+      errPdfEmpty: 'There\u2019s nothing to export yet.',
+      errPdfLayout: 'Couldn\u2019t lay out that text for PDF. Use Copy instead.',
+      errPdfFail: 'The PDF didn\u2019t generate. Use Copy and paste it into a document instead.',
+      errRunMissing: 'That saved run could not be found.',
+      errRunOpen: 'That saved run could not be opened.',
+      fileWrongType: 'That file type won\u2019t work. Use a PDF or .docx.',
+      fileReading: function (n) { return 'Reading ' + n; },
+      fileNoText: 'No text found \u2014 this may be a scanned file. Paste it instead.',
+      fileFail: 'Couldn\u2019t read that file. Paste it instead.',
+      fileLoaded: function (n) { return 'Loaded ' + n; },
+      costLine: function (t, s) {
+        var bits = ['Roughly ' + t + ' tokens'];
+        if (s) bits.push(s + (s === 1 ? ' web search' : ' web searches'));
+        return bits.join(' \u00b7 ') + ' \u2014 a rough estimate, counted against your own Claude usage.';
+      },
+      gatedWarn: function (site) {
+        return site + ' blocks automated access, so this link can\u2019t be read. Open it, copy the posting text, and paste that here instead.';
+      }
+    },
+    sv: {
+      title: 'Jobbanpassaren',
+      sub: 'Spara ditt CV en gång. För varje tjänst får du ansökningsmaterial och en ärlig bild av om den är värd din tid.',
+      cvlabel: 'Ditt CV',
+      cvph: 'Klistra in ditt CV, eller släpp en PDF- eller Word-fil här',
+      cvphTouch: 'Klistra in ditt CV, eller bifoga en PDF- eller Word-fil',
+      dzhint: 'PDF eller .docx',
+      pickfile: 'Välj en fil',
+      pickfileTouch: 'Bifoga en fil',
+      company: 'Företag',
+      location: 'Ort',
+      locationnote: '\u2014 ger en säkrare löneuppskattning',
+      posting: 'Jobbannonsen',
+      postingph: 'Klistra in annonstexten, eller en länk till den',
+      include: 'Ta med',
+      optresearch: 'Företagsresearch',
+      optresearchnote: '\u2014 vad anställda säger, ekonomi',
+      optsalary: 'Löneuppskattning',
+      optsalarynote: '\u2014 marknadsläge och argument',
+      optCost: function (t) { return '+' + t; },
+      costSummary: 'Vad kostar en körning egentligen?',
+      costIntro: 'Anthropic publicerar ingen exakt gräns för någon prisplan, så ingen kan ge dig en sann procentsiffra. Det som är säkert är den relativa kostnaden \u2014 hur mycket varje tillval lägger till.',
+      costBasic: 'CV, brev, matchning, luckor',
+      costWithResearch: '+ företagsresearch',
+      costWithSalary: '+ löneuppskattning',
+      costWithBoth: '+ båda',
+      costTimes: function (n) { return n + '\u00d7 en enkel körning'; },
+      costPlans: 'Mycket ungefärligt, antal körningar per femtimmarsfönster med inställningarna ovan:',
+      planFree: 'Free', planPro: 'Pro', planMax: 'Max 5x',
+      costRuns: function (r) { return r + ' körningar'; },
+      costCaveat: 'Detta är uppskattningar, inte garantier. Gränsen delas med allt annat du gör i Claude, så en arbetsam eftermiddag lämnar mindre kvar till det här. Att stänga av båda tillvalen ger ungefär tre gånger så många körningar.',
+      opthint: 'Båda använder webbsökning, vilket står för det mesta av kostnaden för en körning. Låt dem vara av för ett företag du redan känner till.',
+      go: 'Förbered min ansökan',
+      privacy: 'Filer läses på din enhet. Ingenting sparas på en server.',
+      working: 'Arbetar\u2026',
+      waitNote: 'Det brukar ta under en minut.',
+      waitLong: 'Det tar längre tid än vanligt. Det pågår fortfarande \u2014 webbsökningar kan vara långsamma.',
+      history: 'Dina ansökningar',
+      saved: '\u2014 sparat',
+      outlang: 'Skriv min ansökan på',
+      outauto: 'Samma språk som annonsen',
+      outen: 'Engelska', outsv: 'Svenska',
+      outhint: 'Att matcha annonsens språk ger oftast bättre resultat i rekryteringssystem.',
+      langLabel: 'Gränssnitt',
+      zoneMaterials: 'Ditt material', zoneIntel: 'Innan du söker',
+      zonePractice: 'Öva', zoneFollow: 'Uppföljning', zoneResult: 'Resultat',
+      secCv: 'Anpassat CV', secLetter: 'Personligt brev', secTone: 'Låter det som du?',
+      secMatch: 'Nyckelordsmatchning', secGap: 'Det här saknas', secPay: 'Vad tjänsten bör ge',
+      secReviews: 'Vad anställda säger', secFinancials: 'Hur det går för företaget',
+      secTips: 'Väl förberedd', secFull: 'Fullständigt svar',
+      copy: 'Kopiera', copied: 'Kopierat', copyFail: 'Kopiering misslyckades', downloadPdf: 'Ladda ner PDF',
+      tplClassic: 'Klassisk', tplModern: 'Modern', tplCompact: 'Kompakt',
+      tplClassicNote: 'Serif, centrerat namn \u2014 traditionellt och återhållsamt.',
+      tplModernNote: 'Sans-serif, vänsterställt, linjerade rubriker.',
+      tplCompactNote: 'Tätare radavstånd för att få plats med mer på en sida.',
+      practiceLead: 'Svara på någon av dessa och tryck Enter. Du får poäng och konkreta råd om vad du kan skärpa.',
+      practiceLabel: 'Fått intervju',
+      practiceTip: 'Kryssa i när du fått en intervju \u2014 då tas tips och övningsfrågor fram för jobbet',
+      practiceLoading: 'Förbereder dig inför intervjun\u2026',
+      practiceFail: 'Kunde inte förbereda den här. Försök igen.',
+      secConfidence: 'Det här är jag osäker på',
+      editableHint: 'Redigerbar \u2014 klicka för att ändra texten',
+      edited: 'ändrad',
+      gapLead: 'Har du faktiskt någon av dessa? Tryck på en och säg var du använt den.',
+      gapWhere: 'Var använde du den?',
+      gapApply: function (n) { return n === 1 ? 'Lägg till i CV:t' : 'Lägg till ' + n + ' i CV:t'; },
+      gapWorking: 'Skriver om CV:t med det du lagt till\u2026',
+      gapDone: 'Tillagt. Kontrollera att CV:t ovan låter som du skulle formulera det.',
+      gapFail: 'Det gick inte igenom. Försök igen.',
+      gapSaveBase: 'Lägg till i mitt sparade CV också',
+      gapSavedBase: 'Tillagt i ditt sparade CV',
+      enhanceOpen: 'Gå djupare på vissa roller',
+      enhanceLead: 'Välj de roller som är mest relevanta för det här jobbet. De skrivs om betydligt hårdare \u2014 annonsens exakta formuleringar där din erfarenhet verkligen motsvarar dem, och detaljer som första omgången tonade ner. Resten lämnas orört.',
+      enhanceGo: function (n) { return n === 1 ? 'Superförbättra 1 roll' : 'Superförbättra ' + n + ' roller'; },
+      enhanceGoNone: 'Välj minst en roll',
+      enhanceNote: 'Ingenting hittas på. Saknas ett krav i ditt CV kan det här inte trolla fram det \u2014 bara se till att det som faktiskt finns är omöjligt att missa.',
+      enhanceWorking: 'Skriver om rollerna\u2026',
+      enhanceDone: 'Omskrivet. Läs igenom \u2014 du måste kunna stå för varje rad.',
+      enhanceFail: 'Det gick inte igenom. Försök igen.',
+      scoreStale: 'Poängen gäller den tidigare versionen. Se noteringen under CV:t för hur det ser ut nu.',
+      parseFailed: 'Svaret kom tillbaka i ett oväntat format och kunde inte delas upp i avsnitt. Hela texten finns nedan, men matchningspoäng, luckor och intervjuförberedelser saknas i den här körningen. Att köra om brukar lösa det.',
+      tooUniform: 'Alla roller här är ungefär lika långa, vilket läser som maskinskrivet. Välj de roller som spelar roll för det här jobbet och kör Superförbättra på dem, så blir resten kortare i jämförelse.',
+      exportBtn: 'Exportera som CSV',
+      exportTip: 'Ladda ner dina ansökningar som kalkylblad',
+      exportFail: 'Kunde inte skapa filen. Försök igen.',
+      zonePatterns: 'Mönster i dina ansökningar',
+      patternsBtn: 'Leta efter mönster',
+      patternsLoading: 'Går igenom dina ansökningar\u2026',
+      patternsFail: 'Kunde inte analysera dina ansökningar. Försök igen.',
+      patternsNeed: function (n) {
+        return n === 1 ? 'En ansökan till, så kan jag leta efter mönster.'
+                       : n + ' ansökningar till, så kan jag leta efter mönster.';
+      },
+      secRepeats: 'Det som återkommer',
+      secFit: 'Där du passar bäst',
+      secNext: 'Nästa steg',
+      statApplications: 'sparade', statAvgMatch: 'snittmatchning',
+      statApplied: 'sökta', statInterviews: 'på intervju',
+      zonePrep: 'Inför intervjun',
+      prepFor: 'Gäller:',
+      prepHint: 'Kryssa i \u201dFått intervju\u201d på ett jobb för att förbereda dig.',
+      answerPh: 'Ditt svar \u2014 Enter för att skicka, Skift+Enter för ny rad',
+      reading: 'Läser ditt svar\u2026',
+      rateFail: 'Det gick inte igenom. Tryck Enter för att försöka igen.',
+      thankyou: 'Tackmejl', followup: 'Uppföljningsmejl',
+      writing: 'Skriver ditt ', extraFail: 'Det gick inte igenom. Försök igen.',
+      roleNote: 'Inte tjänsten du menade? Stanna här och kör om \u2014 använd inte det nedan.',
+      reopened: function (d) { return 'Sparad körning \u2014 ' + d + '. Företagsresearchen och löneuppgifterna stämde då; kör om för en aktuell bild.'; },
+      statuses: { 'not applied': 'ej sökt', 'applied': 'sökt', 'interviewing': 'intervju', 'closed': 'avslutad' },
+      statusTip: 'Klicka för att ändra status', removeTip: 'Ta bort ur historiken',
+      countOne: '1 ansökan', countMany: function (n) { return n + ' ansökningar'; },
+      errNoCv: 'Lägg till ditt CV för att komma igång.',
+      errNoPosting: 'Lägg till jobbannonsen \u2014 klistra in texten eller en länk.',
+      errRequest: 'Förfrågan gick inte igenom. Kontrollera din uppkoppling och försök igen.',
+      errPdfLib: 'PDF-biblioteket laddades inte. Ladda om sidan och försök igen.',
+      errPdfEmpty: 'Det finns inget att exportera än.',
+      errPdfLayout: 'Kunde inte formge texten som PDF. Använd Kopiera i stället.',
+      errPdfFail: 'PDF:en skapades inte. Använd Kopiera och klistra in i ett dokument i stället.',
+      errRunMissing: 'Den sparade körningen hittades inte.',
+      errRunOpen: 'Den sparade körningen kunde inte öppnas.',
+      fileWrongType: 'Den filtypen fungerar inte. Använd PDF eller .docx.',
+      fileReading: function (n) { return 'Läser ' + n; },
+      fileNoText: 'Ingen text hittades \u2014 filen kan vara inskannad. Klistra in texten i stället.',
+      fileFail: 'Kunde inte läsa filen. Klistra in texten i stället.',
+      fileLoaded: function (n) { return 'Laddade ' + n; },
+      costLine: function (t, s) {
+        var bits = ['Ungefär ' + t + ' tokens'];
+        if (s) bits.push(s + (s === 1 ? ' webbsökning' : ' webbsökningar'));
+        return bits.join(' \u00b7 ') + ' \u2014 en grov uppskattning, dras från din egen Claude-användning.';
+      },
+      gatedWarn: function (site) {
+        return site + ' blockerar automatisk åtkomst, så länken kan inte läsas. Öppna den, kopiera annonstexten och klistra in den här i stället.';
+      }
+    }
+  };
+
+  var lang = 'en';
+  function T() { return STRINGS[lang]; }
+
+  // Drag-and-drop wording is meaningless on a phone, and the file button
+  // needs to read as the primary action there.
+  var isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+  var LANG_NAME = { en: 'English', sv: 'Swedish' };
+
+  // The interface toggle sets `lang`. Output language is chosen separately and
+  // defaults to matching the posting, which is what ATS matching wants.
+  function outputLangChoice() {
+    return outLangEl ? outLangEl.value : 'auto';
+  }
+
+  // Returns the instruction fragment describing what language to write in.
+  function langInstruction() {
+    var choice = outputLangChoice();
+    if (choice === 'auto') {
+      return 'Decide the output language from the JOB POSTING ONLY. Read the posting\u2019s own sentences \u2014 its descriptive prose, requirements and responsibilities \u2014 and write in that language.\n' +
+        'The candidate\u2019s CV has NO bearing on this decision. Ignore its language entirely when deciding. In particular, proper nouns inside the CV are not evidence of any language: school and university names, employer names, city names, certifications and awards frequently carry non-English spelling and accented characters (for example "Kungliga Tekniska H\u00f6gskolan", "Chalmers Tekniska H\u00f6gskola", "G\u00f6teborg", "Sk\u00f6vde", "Universit\u00e9", "M\u00fcnchen"). Their presence NEVER indicates the posting is in that language and must not shift the output language.\n' +
+        'If the posting is in English, write everything in English even when the CV is Swedish or contains Swedish institution names. If the posting is in Swedish, write in natural, idiomatic Swedish for a Swedish job market \u2014 not translated English \u2014 even when the CV is in English, translating the candidate\u2019s experience rather than leaving it as-is.\n' +
+        'Whatever language you write in, keep proper nouns in their original form and never translate them: institution and school names, employer names, place names, technology names, certifications, and any job title quoted from the posting.';
+    }
+    return 'Write ALL content under those headers in ' + LANG_NAME[choice] + ', regardless of what language the candidate\u2019s CV is written in.' +
+      (choice === 'sv'
+        ? ' Use natural, idiomatic Swedish as written for a Swedish job market \u2014 not translated English.'
+        : '') +
+      ' Keep proper nouns in their original form and never translate them: institution and school names, employer names, place names, technology names, certifications, and any job title quoted from the posting.';
+  }
+
+  // Short form for the secondary prompts (ratings, emails).
+  function langShort() {
+    var choice = outputLangChoice();
+    if (choice === 'auto') return 'the same language as the job posting';
+    return LANG_NAME[choice];
+  }
+
+  function applyLanguage() {
+    var t = T();
+    var set = function (id, val) { var el = $(id); if (el) el.textContent = val; };
+    set('t-title', t.title); set('t-sub', t.sub);
+    set('t-cvlabel', t.cvlabel); set('t-company', t.company);
+    set('t-location', t.location); set('t-locationnote', t.locationnote);
+    set('t-posting', t.posting); set('t-include', t.include);
+    set('t-optresearch', t.optresearch); set('t-optresearchnote', t.optresearchnote);
+    set('t-optsalary', t.optsalary); set('t-optsalarynote', t.optsalarynote);
+    set('t-opthint', t.opthint); set('t-privacy', t.privacy);
+    set('t-costsummary', t.costSummary);
+    set('t-history', t.history);
+    set('t-outlang', t.outlang); set('t-outauto', t.outauto);
+    set('t-outen', t.outen); set('t-outsv', t.outsv); set('t-outhint', t.outhint);
+    set('pick-file', isTouch ? t.pickfileTouch : t.pickfile);
+    goBtn.textContent = t.go;
+    cvEl.placeholder = isTouch ? t.cvphTouch : t.cvph;
+    postingEl.placeholder = t.postingph;
+    if (savedTag.textContent) savedTag.textContent = t.saved;
+    resetHint();
+    updateCost();
+    updatePostingWarning();
+    renderHistory();
+  }
+
+  function setLang(next) {
+    if (lang === next) return;
+    lang = next;
+    langEn.classList.toggle('on', next === 'en');
+    langSv.classList.toggle('on', next === 'sv');
+    langEn.setAttribute('aria-pressed', next === 'en' ? 'true' : 'false');
+    langSv.setAttribute('aria-pressed', next === 'sv' ? 'true' : 'false');
+    applyLanguage();
+    if (window.storage) window.storage.set('lang', next, false).catch(function () {});
+  }
+
+  // ---------- Interview practice, generated on demand per job ----------
+
+  function practiceKey(id) { return 'practice-' + id; }
+
+  // Loads saved questions for a run, or generates and stores them.
+  function getPracticeQuestions(entry) {
+    if (!window.storage) return Promise.reject(new Error('no storage'));
+    return window.storage.get(practiceKey(entry.id), false).then(function (r) {
+      if (r && r.value) {
+        try {
+          var saved = JSON.parse(r.value);
+          // Current shape is { tips, questions }; earlier runs stored a bare array.
+          var prep = Array.isArray(saved) ? { tips: '', questions: saved } : saved;
+          if (prep && prep.questions && prep.questions.length) {
+            // The prep is cached, but the job's CV and posting still need
+            // loading so answer ratings have the right context.
+            return window.storage.get(entry.id, false).then(function (rr) {
+              if (rr && rr.value) {
+                try {
+                  var pl = JSON.parse(rr.value);
+                  if (pl && pl.text) { entry._cv = pl.cv || ''; entry._posting = pl.posting || ''; }
+                } catch (e) {}
+              }
+              return prep;
+            }).catch(function () { return prep; });
+          }
+        } catch (e) { /* fall through and regenerate */ }
+      }
+      return generatePracticeQuestions(entry);
+    }).catch(function () {
+      return generatePracticeQuestions(entry);
+    });
+  }
+
+  function generatePracticeQuestions(entry) {
+    return window.storage.get(entry.id, false).then(function (r) {
+      var posting = '', cvText = '';
+      if (r && r.value) {
+        try {
+          var payload = JSON.parse(r.value);
+          if (payload && payload.text) {
+            posting = payload.posting || '';
+            cvText = payload.cv || '';
+          }
+        } catch (e) { /* legacy run, no stored posting */ }
+      }
+      if (!cvText) cvText = cvEl.value.trim();
+
+      var p = 'This candidate has an interview coming up. Help them prepare.\n\n' +
+        '<candidate_cv>\n' + cvText + '\n</candidate_cv>\n\n' +
+        '<job_posting>\n' + (posting || entry.role || '') + '\n</job_posting>\n' +
+        (entry.company ? '\nCompany: ' + entry.company : '') +
+        (entry.role ? '\nRole: ' + entry.role : '') +
+        '\n\nProduce exactly two sections with these exact English headers:\n' +
+        'INTERVIEW TIPS: 5-8 specific, practical things to do before and during this interview \u2014 what to prepare, what to bring up, what this employer is likely to probe. Concrete to this role and candidate, not general interview advice.\n' +
+        'INTERVIEW QUESTIONS: Exactly 5 likely questions for this role and this candidate, numbered 1-5, one per line, no commentary.\n\n' +
+        'Keep the two header lines in English exactly as written \u2014 they are parsed by software. Write the content in ' + langShort() + '. Plain text, no markdown symbols.';
+
+      entry._cv = cvText;
+      entry._posting = posting;
+
+      return callClaude(p, false).then(function (text) {
+        var prepParts = parseSections(text, ['INTERVIEW TIPS', 'INTERVIEW QUESTIONS']);
+        var qs = parseQuestions(prepParts['INTERVIEW QUESTIONS'] || '');
+        // If the headers come back malformed, read the whole reply as a
+        // question list rather than showing the user nothing.
+        if (!qs.length) qs = parseQuestions(text);
+        if (!qs.length) throw new Error('no questions parsed');
+        qs = qs.slice(0, 5);
+        var prep = { tips: (prepParts['INTERVIEW TIPS'] || '').trim(), questions: qs };
+        window.storage.set(practiceKey(entry.id), JSON.stringify(prep), false).catch(function () {});
+        return prep;
+      });
+    });
+  }
+
+
+  // ---------- "I do have that" — linking a missing skill to a real role ----------
+  // The gap analysis names things the CV does not evidence. Often the candidate
+  // does have them and simply left them off. Rather than making them rewrite the
+  // CV by hand, they say where they used it and the CV is rebuilt with it in
+  // place — grounded in their own statement, not invented.
+
+  function parseGapItems(gapText) {
+    return String(gapText || '').split(/\n/).map(function (l) {
+      return l.replace(/^\s*[-\u2022\u2013*\u00b7]\s*/, '').replace(/^\s*\d+[\.\)]\s*/, '').trim();
+    }).filter(function (l) {
+      // Keep short, skill-like lines; drop prose sentences and empty rows.
+      return l.length > 2 && l.length < 90 && !/[.!?]$/.test(l);
+    }).slice(0, 8);
+  }
+
+  function makeGapSection(gapText, positions, cvSectionEl) {
+    var d = document.createElement('details');
+    d.className = 'sec';
+    var s = document.createElement('summary');
+    s.textContent = T().secGap;
+    d.appendChild(s);
+
+    var b = document.createElement('div');
+    b.className = 'sec-body';
+    b.textContent = gapText;
+    d.appendChild(b);
+
+    var items = parseGapItems(gapText);
+    if (!items.length || !positions.length) return d;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'gap-claim';
+
+    var lead = document.createElement('p');
+    lead.className = 'gap-lead';
+    lead.textContent = T().gapLead;
+    wrap.appendChild(lead);
+
+    var claims = [];   // { skill, roles: [] }
+
+    items.forEach(function (item) {
+      var row = document.createElement('div');
+      row.className = 'gap-row';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gap-chip';
+      btn.textContent = item;
+      row.appendChild(btn);
+
+      var picker = document.createElement('div');
+      picker.className = 'gap-picker';
+      picker.style.display = 'none';
+
+      var q = document.createElement('p');
+      q.className = 'gap-q';
+      q.textContent = T().gapWhere;
+      picker.appendChild(q);
+
+      var chosen = [];
+      positions.forEach(function (pos) {
+        var lab = document.createElement('label');
+        lab.className = 'gap-pos';
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.addEventListener('change', function () {
+          if (cb.checked) chosen.push(pos);
+          else chosen = chosen.filter(function (x) { return x !== pos; });
+          sync();
+        });
+        lab.appendChild(cb);
+        var sp = document.createElement('span');
+        sp.textContent = pos;
+        lab.appendChild(sp);
+        picker.appendChild(lab);
+      });
+
+      function sync() {
+        claims = claims.filter(function (cl) { return cl.skill !== item; });
+        if (chosen.length) claims.push({ skill: item, roles: chosen.slice() });
+        btn.classList.toggle('on', chosen.length > 0);
+        applyBtn.style.display = claims.length ? 'inline-block' : 'none';
+        applyBtn.textContent = T().gapApply(claims.length);
+      }
+
+      btn.addEventListener('click', function () {
+        var open = picker.style.display !== 'none';
+        picker.style.display = open ? 'none' : 'block';
+      });
+
+      row.appendChild(picker);
+      wrap.appendChild(row);
+    });
+
+    var applyBtn = document.createElement('button');
+    applyBtn.type = 'button';
+    applyBtn.className = 'ghost gap-apply';
+    applyBtn.style.display = 'none';
+    wrap.appendChild(applyBtn);
+
+    var status = document.createElement('p');
+    status.className = 'gap-status';
+    status.style.display = 'none';
+    wrap.appendChild(status);
+
+    applyBtn.addEventListener('click', function () {
+      if (!claims.length) return;
+      var cvBody = cvSectionEl && cvSectionEl.querySelector('.sec-body');
+      if (!cvBody) return;
+
+      applyBtn.disabled = true;
+      status.style.display = 'block';
+      status.style.color = 'var(--ink-faint)';
+      status.textContent = T().gapWorking;
+
+      var lines = claims.map(function (cl) {
+        return '- ' + cl.skill + ' \u2014 used in: ' + cl.roles.join('; ');
+      }).join('\n');
+
+      var p = 'The candidate has confirmed they have experience that was missing from their CV.\n\n' +
+        '<current_tailored_cv>\n' + cvBody.innerText + '\n</current_tailored_cv>\n\n' +
+        '<job_posting>\n' + currentPosting + '\n</job_posting>\n\n' +
+        '<confirmed_additions>\n' + lines + '\n</confirmed_additions>\n\n' +
+        'Rewrite the CV so each confirmed addition appears in the right place: in the skills section, and in the entry for the role or roles where it was used. ' +
+        'Work it into the existing wording naturally rather than appending a bare list.\n' +
+        'Add ONLY what is listed in <confirmed_additions>. Do not invent duties, results, tools or dates around it. If the candidate said they used a tool in a role, say they used it \u2014 do not claim they led, introduced or specialised in it.\n' +
+        'Change nothing else. Keep every other line as it stands.\n' +
+        'Return only the rewritten CV, no preamble and no commentary. Write it in ' + langShort() + '. Plain text, no markdown.';
+
+      callAssist(p, false).then(function (text) {
+        applyBtn.disabled = false;
+        cvBody.textContent = stripEmDashes(text.trim());
+        status.style.color = 'var(--accent)';
+        status.textContent = T().gapDone;
+        // Offer to fix the root cause rather than only this application.
+        if (!$('gap-save-base')) {
+          var save = document.createElement('button');
+          save.type = 'button';
+          save.id = 'gap-save-base';
+          save.className = 'ghost';
+          save.style.marginTop = '8px';
+          save.textContent = T().gapSaveBase;
+          save.addEventListener('click', function () {
+            var addition = '\n\n' + claims.map(function (cl) {
+              return cl.skill + ' \u2014 ' + cl.roles.join('; ');
+            }).join('\n');
+            cvEl.value = cvEl.value.trim() + addition;
+            if (window.storage) {
+              window.storage.set('base-cv', cvEl.value, false).then(function () {
+                savedTag.textContent = T().saved;
+              }).catch(function () {});
+            }
+            save.disabled = true;
+            save.textContent = T().gapSavedBase;
+          });
+          wrap.appendChild(save);
+        }
+      }).catch(function () {
+        applyBtn.disabled = false;
+        status.style.color = 'var(--red)';
+        status.textContent = T().gapFail;
+      });
+    });
+
+    d.appendChild(wrap);
+    return d;
+  }
+
+
+
+
+  // ---------- Uniformity check ----------
+  // Instructions about rhythm are followed unreliably, so this measures the
+  // result. Roles of near-identical length are the giveaway: a real CV is
+  // lopsided, with the relevant role deep and the old ones thin.
+
+  function roleBlockLengths(cvText, positions) {
+    if (!positions.length) return [];
+    var text = String(cvText || '');
+    var lines = text.split(/\r?\n/);
+
+    // Find the line each role starts on, matching loosely: the model rewrites
+    // the wording, so compare on the most distinctive word in the title.
+    var marks = [];
+    positions.forEach(function (pos) {
+      var words = pos.split(/[\s,()]+/)
+        .filter(function (w) { return w.length > 3 && !/^\d+$/.test(w); })
+        .sort(function (a, b) { return b.length - a.length; });
+      if (!words.length) return;
+      var needle = words[0].toLowerCase();
+      for (var i = 0; i < lines.length; i++) {
+        if (lines[i].toLowerCase().indexOf(needle) !== -1 &&
+            marks.indexOf(i) === -1) {
+          marks.push(i);
+          break;
+        }
+      }
+    });
+    if (marks.length < 2) return [];
+    marks.sort(function (a, b) { return a - b; });
+
+    return marks.map(function (startLine, idx) {
+      var endLine = (idx + 1 < marks.length) ? marks[idx + 1] : lines.length;
+      return lines.slice(startLine, endLine).join('\n').trim().length;
+    });
+  }
+
+  // Coefficient of variation: standard deviation over the mean. Scale
+  // independent, so it behaves the same for a terse CV and a verbose one.
+  function lengthVariation(lengths) {
+    if (lengths.length < 2) return null;
+    var mean = lengths.reduce(function (a, b) { return a + b; }, 0) / lengths.length;
+    if (!mean) return null;
+    var variance = lengths.reduce(function (acc, n) {
+      return acc + Math.pow(n - mean, 2);
+    }, 0) / lengths.length;
+    return Math.sqrt(variance) / mean;
+  }
+
+  var UNIFORM_THRESHOLD = 0.25;   // below this the roles are suspiciously even
+
+  window.__jobTailorInternal.roleBlockLengths = roleBlockLengths;
+  window.__jobTailorInternal.lengthVariation = lengthVariation;
+
+  // ---------- Dash cleanup ----------
+  // Em dashes are one of the strongest tells that text was machine written, so
+  // anything the user sends out gets them removed. The prompt asks for this
+  // too, but punctuation instructions are followed unreliably, so this is the
+  // guarantee rather than the request.
+  //
+  // Date ranges are protected: "2020-2024" in a CV is normal and correct, and
+  // turning it into "2020, 2024" would be worse than the tell.
+  function stripEmDashes(text) {
+    if (!text) return text;
+    var s = String(text);
+
+    // Protect numeric ranges first, then normalise them to a plain hyphen.
+    var ranges = [];
+    s = s.replace(/(\d)\s*[\u2013\u2014]\s*(\d)/g, function (m, a, b) {
+      ranges.push(a + '-' + b);
+      return '\u0000R' + (ranges.length - 1) + '\u0000';
+    });
+
+    // A dash between spaces is doing the job of a comma, so use one.
+    s = s.replace(/\s+[\u2013\u2014]\s+/g, ', ');
+    // An unspaced em dash joins two words: same treatment.
+    s = s.replace(/[\u2014]/g, ', ');
+    // A remaining en dash between letters is a hyphen.
+    s = s.replace(/([A-Za-z\u00c0-\u017f])\u2013([A-Za-z\u00c0-\u017f])/g, '$1-$2');
+    s = s.replace(/\u2013/g, '-');
+
+    // Tidy what the substitution can leave behind.
+    s = s.replace(/,\s*,/g, ',');
+    s = s.replace(/,\s*([.;:!?])/g, '$1');
+    s = s.replace(/\(\s*,\s*/g, '(');
+    s = s.replace(/\s+,/g, ',');
+    // A line that began with a dash bullet should not start with a comma.
+    s = s.replace(/^[ \t]*,\s*/gm, '');
+
+    return s.replace(/\u0000R(\d+)\u0000/g, function (m, i) { return ranges[Number(i)]; });
+  }
+
+  window.__jobTailorInternal.stripEmDashes = stripEmDashes;
+
+  // ---------- Super enhance: deep tailoring of selected roles ----------
+  // The first pass tailors the whole CV at a reasonable depth. This goes much
+  // harder on the roles the user picks: the posting's exact terminology
+  // wherever the experience genuinely matches, detail that was underweighted,
+  // irrelevant material trimmed.
+  //
+  // What it will not do is chase a target score. The match figure is this
+  // tool's own estimate, so instructing the model to raise it just teaches it
+  // to stuff keywords — which changes nothing in a real applicant tracking
+  // system and pushes the CV toward claims the person cannot support.
+
+  function makeEnhanceBlock(positions, cvSectionEl, scoreSectionEl) {
+    if (!positions.length || !cvSectionEl) return null;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'enhance';
+
+    var toggleLabel = document.createElement('label');
+    toggleLabel.className = 'enhance-toggle';
+    var toggle = document.createElement('input');
+    toggle.type = 'checkbox';
+    toggleLabel.appendChild(toggle);
+    var toggleText = document.createElement('span');
+    toggleText.textContent = T().enhanceOpen;
+    toggleLabel.appendChild(toggleText);
+    wrap.appendChild(toggleLabel);
+
+    var panel = document.createElement('div');
+    panel.className = 'enhance-panel';
+    panel.style.display = 'none';
+    wrap.appendChild(panel);
+
+    var lead = document.createElement('p');
+    lead.className = 'enhance-lead';
+    lead.textContent = T().enhanceLead;
+    panel.appendChild(lead);
+
+    var chosen = [];
+    positions.forEach(function (pos) {
+      var lab = document.createElement('label');
+      lab.className = 'enhance-pos';
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.addEventListener('change', function () {
+        if (cb.checked) chosen.push(pos);
+        else chosen = chosen.filter(function (x) { return x !== pos; });
+        btn.disabled = chosen.length === 0;
+        btn.textContent = chosen.length
+          ? T().enhanceGo(chosen.length)
+          : T().enhanceGoNone;
+      });
+      lab.appendChild(cb);
+      var sp = document.createElement('span');
+      sp.textContent = pos;
+      lab.appendChild(sp);
+      panel.appendChild(lab);
+    });
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'primary enhance-btn';
+    btn.disabled = true;
+    btn.textContent = T().enhanceGoNone;
+    panel.appendChild(btn);
+
+    var note = document.createElement('p');
+    note.className = 'enhance-note';
+    note.textContent = T().enhanceNote;
+    panel.appendChild(note);
+
+    var status = document.createElement('p');
+    status.className = 'enhance-status';
+    status.style.display = 'none';
+    panel.appendChild(status);
+
+    toggle.addEventListener('change', function () {
+      panel.style.display = toggle.checked ? 'block' : 'none';
+    });
+
+    btn.addEventListener('click', function () {
+      var cvBody = cvSectionEl.querySelector('.sec-body');
+      if (!cvBody || !chosen.length) return;
+
+      btn.disabled = true;
+      status.style.display = 'block';
+      status.style.color = 'var(--ink-faint)';
+      status.textContent = T().enhanceWorking;
+
+      var p = 'Tailor specific roles in this CV as hard as the underlying experience honestly allows.\n\n' +
+        '<current_cv>\n' + cvBody.innerText + '\n</current_cv>\n\n' +
+        '<job_posting>\n' + currentPosting + '\n</job_posting>\n\n' +
+        '<roles_to_deepen>\n' + chosen.join('\n') + '\n</roles_to_deepen>\n\n' +
+        'For the roles listed in <roles_to_deepen>, and those roles only:\n' +
+        '\u2022 Use the job posting\u2019s exact terminology wherever the candidate\u2019s real experience matches it. If they wrote "made shaders" and the posting says "shader authoring", use the posting\u2019s phrase \u2014 the work is the same.\n' +
+        '\u2022 Expand detail the CV states but underplays. A one-line bullet covering significant work should carry the scope, the tools and the outcome the CV already gives elsewhere.\n' +
+        '\u2022 Lead each role with whatever is most relevant to this posting, not with whatever came first chronologically.\n' +
+        '\u2022 Cut or shorten content in those roles that this posting does not care about, to make room.\n' +
+        '\u2022 Where the CV gives a number, keep it and put it where it will be seen.\n\n' +
+        'Hard limits. Breaking any of these makes the CV worse, not better, because the candidate has to defend every line in an interview:\n' +
+        '\u2022 Add no experience, tool, responsibility, outcome or date that is not already in the CV.\n' +
+        '\u2022 Do not turn a responsibility into an achievement, or participation into ownership. "Worked on" does not become "led".\n' +
+        '\u2022 Do not use a posting term for work the candidate did not actually do. Matching wording to real experience is fair; matching it to absent experience is a lie.\n' +
+        '\u2022 Leave every role not listed above exactly as it stands.\n' +
+        '\u2022 Use no em dashes or en dashes as punctuation. A comma or a full stop instead. Date ranges are fine.\n' +
+        '\u2022 The selected roles should end up visibly longer than the rest. Do not even out the CV: the contrast between a deep recent role and a one-line old one is what a real CV looks like. Vary bullet length within the rewritten roles too, rather than producing a uniform block.\n\n' +
+        'Then produce two sections with these exact English headers:\n' +
+        'ENHANCED CV: the full CV, with the selected roles rewritten and everything else unchanged. Plain text, no markdown.\n' +
+        'WHAT CHANGED: an honest account, in under 90 words. State the new estimated keyword match as a percentage and whether it moved. If requirements are still unmet because the CV genuinely does not evidence them, say which \u2014 that is the ceiling, and no amount of rewording lifts it. Do not claim a score you cannot justify from the text.\n\n' +
+        'Keep the header lines in English exactly as written. Write the content in ' + langShort() + '.';
+
+      callAssist(p, false).then(function (text) {
+        btn.disabled = false;
+        var parts = parseSections(text, ['ENHANCED CV', 'WHAT CHANGED']);
+        var newCv = (parts['ENHANCED CV'] || '').trim();
+        if (!newCv) {
+          status.style.color = 'var(--red)';
+          status.textContent = T().enhanceFail;
+          return;
+        }
+        cvBody.textContent = stripEmDashes(newCv);
+
+        status.style.color = '';
+        status.textContent = (parts['WHAT CHANGED'] || '').trim() || T().enhanceDone;
+
+        // The match score above is now stale; say so rather than leave a
+        // figure on screen that no longer describes the CV.
+        if (scoreSectionEl) {
+          var stale = scoreSectionEl.querySelector('.score-stale');
+          if (!stale) {
+            stale = document.createElement('p');
+            stale.className = 'score-stale';
+            scoreSectionEl.appendChild(stale);
+          }
+          stale.textContent = T().scoreStale;
+        }
+      }).catch(function () {
+        btn.disabled = false;
+        status.style.color = 'var(--red)';
+        status.textContent = T().enhanceFail;
+      });
+    });
+
+    return wrap;
+  }
+
+  // ---------- Package rendering (shared by live runs and saved ones) ----------
+
+  var SECTION_KEYS = ['ROLE CONFIRMATION', 'TAILORED CV', 'COVER LETTER', 'ATS MATCH SCORE', 'SKILLS GAP', 'TONE CHECK', 'POSITIONS', 'CONFIDENCE', 'INTERVIEW TIPS', 'COMPANY RED FLAGS', 'COMPANY FINANCIALS', 'SALARY', 'INTERVIEW QUESTIONS'];
+
+  function renderPackage(text, opts) {
+    opts = opts || {};
+    roleSlot.innerHTML = ''; zoneMaterials.innerHTML = ''; zoneIntel.innerHTML = ''; zonePractice.innerHTML = '';
+
+    var parts = parseSections(text, SECTION_KEYS);
+    var anyParsed = SECTION_KEYS.some(function (k) { return parts[k]; });
+    if (!anyParsed) {
+      // Previously this quietly showed the raw reply, which looked fine while
+      // the run silently saved with no role, score or practice questions.
+      var warn = document.createElement('p');
+      warn.className = 'parse-warn';
+      warn.textContent = T().parseFailed;
+      zoneMaterials.appendChild(warn);
+      var fallback = makeZone(T().zoneResult);
+      fallback.appendChild(makeSection(T().secFull, text, { open: true }));
+      zoneMaterials.appendChild(fallback);
+      return parts;
+    }
+
+    if (opts.reopened) {
+      var banner = document.createElement('p');
+      banner.className = 'reopened';
+      banner.textContent = T().reopened(opts.savedOn || '');
+      roleSlot.appendChild(banner);
+    }
+
+    if (parts['ROLE CONFIRMATION']) {
+      var rc = document.createElement('div');
+      rc.className = 'role-check';
+
+      // The model returns the role on line one and "Written in: X" on line two.
+      var rcLines = parts['ROLE CONFIRMATION'].split(/\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+      var roleLine = rcLines[0] || parts['ROLE CONFIRMATION'];
+      var langLine = rcLines.slice(1).join(' ');
+
+      var role = document.createElement('p');
+      role.className = 'rc-role';
+      role.textContent = roleLine;
+      rc.appendChild(role);
+
+      if (langLine) {
+        var lp = document.createElement('p');
+        lp.className = 'rc-lang';
+        lp.textContent = langLine;
+        rc.appendChild(lp);
+      }
+
+      if (!opts.reopened) {
+        var note = document.createElement('p');
+        note.className = 'rc-note';
+        note.textContent = T().roleNote;
+        rc.appendChild(note);
+      }
+      roleSlot.appendChild(rc);
+    }
+
+    var mat = makeZone(T().zoneMaterials);
+    if (parts['CONFIDENCE']) {
+      var conf = document.createElement('details');
+      conf.className = 'sec conf-sec';
+      conf.open = true;
+      var cs = document.createElement('summary');
+      cs.textContent = T().secConfidence;
+      conf.appendChild(cs);
+      var cb = document.createElement('div');
+      cb.className = 'sec-body';
+      cb.textContent = parts['CONFIDENCE'];
+      conf.appendChild(cb);
+      mat.appendChild(conf);
+    }
+    var cvSection = null;
+    if (parts['TAILORED CV']) {
+      cvSection = makeSection(T().secCv, stripEmDashes(parts['TAILORED CV']),
+        { open: true, pdf: 'tailored-cv.pdf', templates: true, editable: true });
+      mat.appendChild(cvSection);
+    }
+    if (parts['COVER LETTER']) mat.appendChild(makeSection(T().secLetter, stripEmDashes(parts['COVER LETTER']), { pdf: 'cover-letter.pdf', editable: true }));
+    if (parts['TONE CHECK']) mat.appendChild(makeSection(T().secTone, parts['TONE CHECK']));
+    if (mat.children.length > 1) zoneMaterials.appendChild(mat);
+
+    var positions = parts['POSITIONS'] && parts['POSITIONS'].toLowerCase().indexOf('none') !== 0
+      ? parseQuestions(parts['POSITIONS'])
+      : [];
+
+    var intel = makeZone(T().zoneIntel);
+    var scoreSection = null;
+    if (parts['ATS MATCH SCORE']) {
+      scoreSection = document.createElement('details');
+      scoreSection.className = 'sec'; scoreSection.open = true;
+      var s = document.createElement('summary');
+      s.textContent = T().secMatch;
+      scoreSection.appendChild(s);
+      scoreSection.appendChild(makeScoreBlock(parts['ATS MATCH SCORE']));
+      intel.appendChild(scoreSection);
+    }
+
+    if (cvSection) {
+      var lengths = roleBlockLengths(parts['TAILORED CV'], positions);
+      var variation = lengthVariation(lengths);
+      if (variation !== null && variation < UNIFORM_THRESHOLD) {
+        var uni = document.createElement('p');
+        uni.className = 'uniform-warn';
+        uni.textContent = T().tooUniform;
+        cvSection.appendChild(uni);
+      }
+
+      var enhance = makeEnhanceBlock(positions, cvSection, scoreSection);
+      if (enhance) cvSection.appendChild(enhance);
+    }
+    if (parts['SKILLS GAP']) {
+      intel.appendChild(makeGapSection(parts['SKILLS GAP'], positions, cvSection));
+    }
+    if (parts['SALARY']) intel.appendChild(makeSection(T().secPay, parts['SALARY']));
+    if (parts['COMPANY RED FLAGS']) intel.appendChild(makeSection(T().secReviews, parts['COMPANY RED FLAGS']));
+    if (parts['COMPANY FINANCIALS']) intel.appendChild(makeSection(T().secFinancials, parts['COMPANY FINANCIALS']));
+    if (intel.children.length > 1) zoneIntel.appendChild(intel);
+
+    addExtras();
+    return parts;
+  }
+
+  // ---------- Application history ----------
+
+  var HISTORY_INDEX = 'history-index';
+  var MAX_HISTORY = 40;
+  var historyCache = [];
+
+  function roleFromConfirmation(line) {
+    if (!line) return '';
+    // "Applying for: Senior Technical Artist — Design at Volvo Cars", or its
+    // Swedish equivalent when the output language is Swedish.
+    var t = String(line)
+      .replace(/^\s*(applying\s+for|s\u00f6ker(\s+till)?|ans\u00f6ker\s+om|avser\s+tj\u00e4nsten)\s*:?\s*/i, '')
+      .trim();
+    return t.split(/\n/)[0].trim();
+  }
+
+  function formatDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function fallbackRole(text, company) {
+    if (company) return company;
+    var first = String(text || '').split(/\n/)
+      .map(function (l) { return l.trim(); })
+      .filter(function (l) { return l.length > 3 && l.length < 90; })[0];
+    return first || '';
+  }
+
+  function saveRun(text, company, posting, location) {
+    if (!window.storage) return;
+    var parts = parseSections(text, SECTION_KEYS);
+    var scoreMatch = (parts['ATS MATCH SCORE'] || '').match(/(\d{1,3})\s*%/);
+    var id = 'run-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+
+    var entry = {
+      id: id,
+      when: new Date().toISOString(),
+      company: company || '',
+      // If the confirmation is missing the run would otherwise save with no
+      // name at all, leaving an unidentifiable row in the history.
+      role: roleFromConfirmation(parts['ROLE CONFIRMATION']) || fallbackRole(text, company),
+      location: location || '',
+      score: scoreMatch ? Math.max(0, Math.min(100, parseInt(scoreMatch[1], 10))) : null,
+      status: 'not applied'
+    };
+
+    // Full text lives in its own key so the index stays small and quick to read.
+    // The posting and CV are stored with it so a reopened run still has real
+    // context for interview practice and follow-up emails.
+    var payload = JSON.stringify({ v: 1, text: text, posting: posting || '', cv: currentCv || '' });
+    window.storage.set(id, payload, false).then(function () {
+      historyCache.unshift(entry);
+      var trimmed = historyCache.slice(0, MAX_HISTORY);
+      var dropped = historyCache.slice(MAX_HISTORY);
+      historyCache = trimmed;
+      return window.storage.set(HISTORY_INDEX, JSON.stringify(historyCache), false).then(function () {
+        dropped.forEach(function (d) {
+          window.storage.delete(d.id, false).catch(function () {});
+          window.storage.delete(practiceKey(d.id), false).catch(function () {});
+        });
+        renderHistory();
+      });
+    }).catch(function (e) {
+      console.error('Could not save this run to history:', e);
+    });
+  }
+
+  function persistIndex() {
+    if (!window.storage) return Promise.resolve();
+    return window.storage.set(HISTORY_INDEX, JSON.stringify(historyCache), false);
+  }
+
+  function loadHistory() {
+    if (!window.storage) return;
+    window.storage.get(HISTORY_INDEX, false).then(function (r) {
+      if (!r || !r.value) return;
+      try {
+        var parsed = JSON.parse(r.value);
+        if (Array.isArray(parsed)) { historyCache = parsed; renderHistory(); }
+      } catch (e) {
+        console.error('History index was unreadable:', e);
+      }
+    }).catch(function () { /* no history yet */ });
+  }
+
+  function openRun(entry) {
+    if (!window.storage) return;
+    window.storage.get(entry.id, false).then(function (r) {
+      if (!r || !r.value) { showError(T().errRunMissing); return; }
+
+      // Runs are stored as a JSON payload; older ones were plain text.
+      var text = r.value, posting = '', cv = '';
+      try {
+        var payload = JSON.parse(r.value);
+        if (payload && payload.text) {
+          text = payload.text;
+          posting = payload.posting || '';
+          cv = payload.cv || '';
+        }
+      } catch (e) { /* plain-text run from an earlier version */ }
+
+      currentCv = cv || cvEl.value.trim();
+      currentCompany = entry.company || '';
+      currentLocation = entry.location || '';
+      currentPosting = posting || '(the original posting text was not saved with this run)';
+      renderPackage(text, { reopened: true, savedOn: formatDate(entry.when) });
+      historyWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }).catch(function () {
+      showError(T().errRunOpen);
+    });
+  }
+
+  function deleteRun(entry) {
+    historyCache = historyCache.filter(function (h) { return h.id !== entry.id; });
+    persistIndex().then(function () {
+      if (window.storage) {
+        window.storage.delete(entry.id, false).catch(function () {});
+        window.storage.delete(practiceKey(entry.id), false).catch(function () {});
+      }
+      zonePractice.innerHTML = '';
+      renderHistory();
+    }).catch(function () { renderHistory(); });
+  }
+
+  function cycleStatus(entry) {
+    var order = ['not applied', 'applied', 'interviewing', 'closed'];
+    var i = order.indexOf(entry.status);
+    entry.status = order[(i + 1) % order.length];
+    persistIndex().then(renderHistory).catch(renderHistory);
+  }
+
+  function openPractice(entry, box) {
+    zonePractice.innerHTML = '';
+    var zone = makeZone(T().zonePractice);
+    var note = document.createElement('p');
+    note.style.cssText = 'font-size:13px;color:var(--ink-soft);margin:12px 0 4px;max-width:60ch;';
+    note.textContent = T().practiceLoading;
+    zone.appendChild(note);
+    zonePractice.appendChild(zone);
+    zonePractice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Practice questions need the job's own context, so set it before asking.
+    currentCompany = entry.company || '';
+    currentLocation = entry.location || '';
+
+    getPracticeQuestions(entry).then(function (prep) {
+      zonePractice.innerHTML = '';
+      renderPractice(prep, entry);
+    }).catch(function () {
+      note.textContent = T().practiceFail;
+      note.style.color = 'var(--red)';
+      if (box) { box.checked = false; entry.practice = false; persistIndex().catch(function () {}); }
+    });
+  }
+
+  // ---------- Portfolio-level intelligence ----------
+  // Statistics are computed here rather than asked of the model: arithmetic
+  // should be arithmetic. The model only interprets the summary.
+
+  var MIN_FOR_PATTERNS = 5;
+
+  function historySignature() {
+    return historyCache.map(function (h) {
+      return h.id + ':' + (h.score === null || h.score === undefined ? '-' : h.score) + ':' + h.status;
+    }).join('|');
+  }
+
+  function computePortfolioStats(list) {
+    var source = list || historyCache;
+    var scored = source.filter(function (h) { return typeof h.score === 'number'; });
+    var scores = scored.map(function (h) { return h.score; });
+    var mean = function (a) { return a.length ? Math.round(a.reduce(function (x, y) { return x + y; }, 0) / a.length) : null; };
+
+    var byStatus = {};
+    ['not applied', 'applied', 'interviewing', 'closed'].forEach(function (s) {
+      var group = source.filter(function (h) { return h.status === s; });
+      byStatus[s] = {
+        count: group.length,
+        avgScore: mean(group.filter(function (h) { return typeof h.score === 'number'; })
+                        .map(function (h) { return h.score; }))
+      };
+    });
+
+    return {
+      total: source.length,
+      scored: scored.length,
+      avgScore: mean(scores),
+      minScore: scores.length ? Math.min.apply(null, scores) : null,
+      maxScore: scores.length ? Math.max.apply(null, scores) : null,
+      byStatus: byStatus,
+      reachedInterview: byStatus['interviewing'].count,
+      applied: byStatus['applied'].count + byStatus['interviewing'].count + byStatus['closed'].count
+    };
+  }
+
+  // Pulls the skills-gap text from each stored run, which is where the
+  // recurring weaknesses actually live.
+  function collectGaps(limit) {
+    var recent = historyCache.slice(0, limit || 20);
+    var reads = recent.map(function (h) {
+      return window.storage.get(h.id, false).then(function (r) {
+        if (!r || !r.value) return null;
+        var text = r.value;
+        try {
+          var payload = JSON.parse(r.value);
+          if (payload && payload.text) text = payload.text;
+        } catch (e) { /* legacy plain-text run */ }
+        var parts = parseSections(text, ['SKILLS GAP', 'ATS MATCH SCORE']);
+        var gap = (parts['SKILLS GAP'] || '').trim();
+        if (!gap) return null;
+        return {
+          role: h.role || h.company || 'Untitled',
+          score: h.score,
+          status: h.status,
+          gap: gap.slice(0, 400)
+        };
+      }).catch(function () { return null; });
+    });
+    return Promise.all(reads).then(function (rows) {
+      return rows.filter(Boolean);
+    });
+  }
+
+  function runPortfolioAnalysis() {
+    var stats = computePortfolioStats();
+    return collectGaps(20).then(function (rows) {
+      var lines = rows.map(function (r) {
+        return '- ' + r.role + ' | match ' + (r.score === null || r.score === undefined ? 'unknown' : r.score + '%') +
+          ' | status ' + r.status + ' | gaps: ' + r.gap.replace(/\n+/g, ' ');
+      }).join('\n');
+
+      var statusLine = Object.keys(stats.byStatus).map(function (s) {
+        var b = stats.byStatus[s];
+        return s + ': ' + b.count + (b.avgScore !== null ? ' (avg match ' + b.avgScore + '%)' : '');
+      }).join(', ');
+
+      var p = 'Here is a summary of one job seeker\u2019s applications. The figures are already computed \u2014 do not recalculate them.\n\n' +
+        'Applications recorded: ' + stats.total + '\n' +
+        'Average keyword match: ' + (stats.avgScore === null ? 'unknown' : stats.avgScore + '%') +
+        (stats.minScore !== null ? ' (range ' + stats.minScore + '\u2013' + stats.maxScore + '%)' : '') + '\n' +
+        'By status \u2014 ' + statusLine + '\n\n' +
+        'Per application, with the skills gaps identified at the time:\n' + lines + '\n\n' +
+        'Write three sections with these exact English headers:\n' +
+        'WHAT REPEATS: Weaknesses or missing skills that appear across several applications, not one-offs. Name how many applications each appears in. If nothing genuinely recurs, say so plainly.\n' +
+        'WHERE YOU FIT BEST: Which kinds of role this person scores well on and which they score poorly on, based only on the matches above. If the sample is too small or too uniform to tell, say that instead of guessing.\n' +
+        'WHAT TO DO NEXT: Two or three concrete actions, ordered by likely impact. Ground each one in a pattern named above.\n\n' +
+        'Be strict about evidence. With fewer than about ten applications, most apparent patterns are noise \u2014 say so where that applies rather than presenting a coincidence as a finding. Never claim a trend from a single application. Do not invent numbers beyond those given.\n' +
+        'Keep the header lines in English exactly as written. Write the content in ' + langShort() + '. Plain text, no markdown symbols.';
+
+      return callClaude(p, false).then(function (text) {
+        return { text: text, stats: stats, sampled: rows.length };
+      });
+    });
+  }
+
+  function openPortfolio(btn) {
+    var sig = historySignature();
+    zonePortfolio.innerHTML = '';
+    var zone = makeZone(T().zonePatterns);
+    var note = document.createElement('p');
+    note.style.cssText = 'font-size:13px;color:var(--ink-soft);margin:12px 0 4px;max-width:60ch;';
+    note.textContent = T().patternsLoading;
+    zone.appendChild(note);
+    zonePortfolio.appendChild(zone);
+
+    var render = function (result) {
+      zonePortfolio.innerHTML = '';
+      var z = makeZone(T().zonePatterns);
+      z.appendChild(makeStatStrip(result.stats));
+      var parts = parseSections(result.text, ['WHAT REPEATS', 'WHERE YOU FIT BEST', 'WHAT TO DO NEXT']);
+      var any = false;
+      [['WHAT REPEATS', T().secRepeats], ['WHERE YOU FIT BEST', T().secFit], ['WHAT TO DO NEXT', T().secNext]]
+        .forEach(function (pair) {
+          if (parts[pair[0]]) { z.appendChild(makeSection(pair[1], parts[pair[0]], { open: true })); any = true; }
+        });
+      if (!any) z.appendChild(makeSection(T().zonePatterns, result.text, { open: true }));
+      zonePortfolio.appendChild(z);
+      zonePortfolio.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    };
+
+    var cached = null;
+    var load = window.storage
+      ? window.storage.get('portfolio', false).then(function (r) {
+          if (r && r.value) {
+            try {
+              var saved = JSON.parse(r.value);
+              if (saved && saved.sig === sig && saved.text) cached = saved;
+            } catch (e) {}
+          }
+        }).catch(function () {})
+      : Promise.resolve();
+
+    load.then(function () {
+      if (cached) { render(cached); return; }
+      if (btn) btn.disabled = true;
+      return runPortfolioAnalysis().then(function (result) {
+        if (btn) btn.disabled = false;
+        render(result);
+        if (window.storage) {
+          window.storage.set('portfolio', JSON.stringify({
+            sig: sig, text: result.text, stats: result.stats, sampled: result.sampled
+          }), false).catch(function () {});
+        }
+      });
+    }).catch(function () {
+      if (btn) btn.disabled = false;
+      note.textContent = T().patternsFail;
+      note.style.color = 'var(--red)';
+    });
+  }
+
+  function makeStatStrip(stats) {
+    var wrap = document.createElement('div');
+    wrap.className = 'statstrip';
+    var cells = [
+      [String(stats.total), T().statApplications],
+      [stats.avgScore === null ? '\u2014' : stats.avgScore + '%', T().statAvgMatch],
+      [String(stats.applied), T().statApplied],
+      [String(stats.reachedInterview), T().statInterviews]
+    ];
+    cells.forEach(function (c) {
+      var cell = document.createElement('div');
+      cell.className = 'statcell';
+      var n = document.createElement('div');
+      n.className = 'statnum';
+      n.textContent = c[0];
+      var l = document.createElement('div');
+      l.className = 'statlabel';
+      l.textContent = c[1];
+      cell.appendChild(n); cell.appendChild(l);
+      wrap.appendChild(cell);
+    });
+    return wrap;
+  }
+
+  // ---------- History export ----------
+
+  function csvCell(v) {
+    var s = (v === null || v === undefined) ? '' : String(v);
+    // Quote if the value contains a delimiter, quote or newline; double any quotes.
+    if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }
+
+  function buildHistoryCsv(list) {
+    var source = list || historyCache;
+    var head = ['Role', 'Company', 'Location', 'Date', 'Match %', 'Status'];
+    var rows = source.map(function (h) {
+      var d = new Date(h.when);
+      var iso = isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
+      return [
+        h.role || '',
+        h.company || '',
+        h.location || '',
+        iso,
+        (typeof h.score === 'number') ? h.score : '',
+        h.status || ''
+      ].map(csvCell).join(',');
+    });
+    // Oldest first reads better in a spreadsheet than newest first.
+    rows.reverse();
+    // BOM so Excel opens UTF-8 correctly — Swedish characters break without it.
+    return '\ufeff' + [head.map(csvCell).join(',')].concat(rows).join('\r\n') + '\r\n';
+  }
+
+  function downloadHistoryCsv() {
+    if (!historyCache.length) return;
+    try {
+      var csv = buildHistoryCsv();
+      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'applications.csv';
+      a.rel = 'noopener';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 4000);
+    } catch (err) {
+      console.error('CSV export failed:', err);
+      showError(T().exportFail);
+    }
+  }
+
+  window.__jobTailorInternal.buildHistoryCsv = buildHistoryCsv;
+  window.__jobTailorInternal.computePortfolioStats = computePortfolioStats;
+  window.__jobTailorInternal.scoreFromText = scoreFromText;
+  window.__jobTailorInternal.csvCell = csvCell;
+
+  function renderHistory() {
+    historyList.innerHTML = '';
+    if (!historyCache.length) { historyWrap.style.display = 'none'; return; }
+    historyWrap.style.display = 'block';
+    historyCount.textContent = historyCache.length === 1 ? T().countOne : T().countMany(historyCache.length);
+    historyHint.textContent = T().prepHint;
+
+    historyCache.forEach(function (entry) {
+      var row = document.createElement('div');
+      row.className = 'hrow';
+
+      var practiceWrap = document.createElement('label');
+      practiceWrap.className = 'hpractice';
+      practiceWrap.title = T().practiceTip;
+
+      var practiceBox = document.createElement('input');
+      practiceBox.type = 'checkbox';
+      practiceBox.checked = !!entry.practice;
+      practiceWrap.appendChild(practiceBox);
+
+      var practiceLabel = document.createElement('span');
+      practiceLabel.textContent = T().practiceLabel;
+      practiceWrap.appendChild(practiceLabel);
+
+      practiceBox.addEventListener('change', function () {
+        entry.practice = practiceBox.checked;
+        persistIndex().catch(function () {});
+        if (practiceBox.checked) {
+          openPractice(entry, practiceBox);
+        } else {
+          zonePractice.innerHTML = '';
+        }
+      });
+
+      row.appendChild(practiceWrap);
+
+      var main = document.createElement('button');
+      main.className = 'hmain';
+      main.type = 'button';
+
+      var title = document.createElement('span');
+      title.className = 'htitle';
+      title.textContent = entry.role || entry.company || 'Untitled application';
+      main.appendChild(title);
+
+      var meta = document.createElement('span');
+      meta.className = 'hmeta';
+      var bits = [];
+      if (entry.company && entry.role && entry.role.indexOf(entry.company) === -1) bits.push(entry.company);
+      bits.push(formatDate(entry.when));
+      if (entry.score !== null && entry.score !== undefined) bits.push(entry.score + '% match');
+      meta.textContent = bits.filter(Boolean).join(' \u00b7 ');
+      main.appendChild(meta);
+
+      main.addEventListener('click', function () { openRun(entry); });
+      row.appendChild(main);
+
+      var status = document.createElement('button');
+      status.className = 'hstatus s-' + entry.status.replace(/\s+/g, '-');
+      status.type = 'button';
+      status.textContent = T().statuses[entry.status] || entry.status;
+      status.title = T().statusTip;
+      status.addEventListener('click', function (e) { e.stopPropagation(); cycleStatus(entry); });
+      row.appendChild(status);
+
+      var del = document.createElement('button');
+      del.className = 'hdel';
+      del.type = 'button';
+      del.textContent = '\u00d7';
+      del.title = T().removeTip;
+      del.setAttribute('aria-label', 'Remove ' + (entry.role || 'this application') + ' from history');
+      del.addEventListener('click', function (e) { e.stopPropagation(); deleteRun(entry); });
+      row.appendChild(del);
+
+      historyList.appendChild(row);
+    });
+
+    patternsBar.innerHTML = '';
+
+    var exportBtn = document.createElement('button');
+    exportBtn.className = 'ghost export-btn';
+    exportBtn.type = 'button';
+    exportBtn.textContent = T().exportBtn;
+    exportBtn.title = T().exportTip;
+    exportBtn.addEventListener('click', downloadHistoryCsv);
+
+    if (historyCache.length >= MIN_FOR_PATTERNS) {
+      var pb = document.createElement('button');
+      pb.className = 'ghost patterns-btn';
+      pb.type = 'button';
+      pb.textContent = T().patternsBtn;
+      pb.addEventListener('click', function () { openPortfolio(pb); });
+      patternsBar.appendChild(pb);
+    } else {
+      var need = MIN_FOR_PATTERNS - historyCache.length;
+      var msg = document.createElement('p');
+      msg.className = 'patterns-wait';
+      msg.textContent = T().patternsNeed(need);
+      patternsBar.appendChild(msg);
+    }
+    patternsBar.appendChild(exportBtn);
+  }
+
+  // ---------- Usage estimate ----------
+  // Rough only: ~4 characters per token, plus flat allowances per generated
+  // section and per web search. Real usage varies with how much the model
+  // writes and how many searches it actually runs.
+
+  var SECTION_COST = {
+    'ROLE CONFIRMATION': 30, 'TAILORED CV': 700, 'COVER LETTER': 300,
+    'ATS MATCH SCORE': 150, 'SKILLS GAP': 120, 'TONE CHECK': 80, 'POSITIONS': 70, 'CONFIDENCE': 130,
+    'COMPANY RED FLAGS': 200, 'COMPANY FINANCIALS': 180,
+    'SALARY': 250
+  };
+  var SEARCH_COST = 3000;      // per search: query plus returned results
+  var PROMPT_SCAFFOLD = 700;   // the fixed instruction text
+
+  function looksLikeUrl(s) {
+    return /^\s*https?:\/\/\S+\s*$/i.test(s) || /^\s*www\.\S+\s*$/i.test(s);
+  }
+
+  // A URL anywhere in the field means the model may need to fetch something,
+  // even if the user also pasted a title line or notes around it.
+  function containsUrl(s) {
+    return /\bhttps?:\/\/\S+/i.test(s) || /\bwww\.[a-z0-9-]+\.\S+/i.test(s);
+  }
+
+  // Sites that block automated access, so a URL alone will not be readable.
+  var GATED_SITES = /\b(linkedin\.com|indeed\.[a-z.]+|glassdoor\.[a-z.]+|ziprecruiter\.com|monster\.[a-z.]+)/i;
+
+  function gatedSiteName(s) {
+    var m = s.match(GATED_SITES);
+    if (!m) return null;
+    var host = m[1].toLowerCase();
+    if (host.indexOf('linkedin') === 0) return 'LinkedIn';
+    if (host.indexOf('indeed') === 0) return 'Indeed';
+    if (host.indexOf('glassdoor') === 0) return 'Glassdoor';
+    if (host.indexOf('ziprecruiter') === 0) return 'ZipRecruiter';
+    if (host.indexOf('monster') === 0) return 'Monster';
+    return 'That site';
+  }
+
+  function isBareGatedUrl(s) {
+    // Only a problem when the URL is all we have — if they also pasted the
+    // posting text, there is plenty to work from.
+    return looksLikeUrl(s) && GATED_SITES.test(s);
+  }
+
+  function updatePostingWarning() {
+    var v = postingEl.value;
+    if (isBareGatedUrl(v)) {
+      var site = gatedSiteName(v) || 'That site';
+      postingWarn.textContent = T().gatedWarn(site);
+      postingWarn.style.display = 'block';
+    } else {
+      postingWarn.style.display = 'none';
+    }
+  }
+
+  function estimateRun() {
+    var cv = cvEl.value, posting = postingEl.value;
+    var wantResearch = optResearch.checked, wantSalary = optSalary.checked;
+
+    var input = Math.ceil((cv.length + posting.length) / 4) + PROMPT_SCAFFOLD;
+
+    var output = 0;
+    Object.keys(SECTION_COST).forEach(function (k) {
+      if (!wantResearch && (k === 'COMPANY RED FLAGS' || k === 'COMPANY FINANCIALS')) return;
+      if (!wantSalary && k === 'SALARY') return;
+      output += SECTION_COST[k];
+    });
+
+    var searches = 0;
+    if (containsUrl(posting)) searches += 1;
+    if (wantResearch) searches += 2;
+    if (wantSalary) searches += 1;
+
+    return {
+      input: input,
+      output: output,
+      search: searches * SEARCH_COST,
+      searches: searches,
+      total: input + output + searches * SEARCH_COST
+    };
+  }
+
+  function fmtTokens(n) {
+    if (n >= 1000) return Math.round(n / 100) / 10 + 'k';
+    return String(n);
+  }
+
+  // What each optional block adds on its own: the sections it generates plus
+  // the web searches it triggers. Shown next to the checkbox so the choice is
+  // made with the price visible rather than discovered afterwards.
+  function optionCost(which) {
+    if (which === 'research') {
+      return SECTION_COST['COMPANY RED FLAGS'] + SECTION_COST['COMPANY FINANCIALS'] + 2 * SEARCH_COST;
+    }
+    return SECTION_COST['SALARY'] + SEARCH_COST;
+  }
+
+  function updateOptionCosts() {
+    var r = $('cost-research'), s = $('cost-salary');
+    if (r) r.textContent = T().optCost(fmtTokens(optionCost('research')));
+    if (s) s.textContent = T().optCost(fmtTokens(optionCost('salary')));
+  }
+
+  // Anthropic does not publish token caps for any plan, and the limit depends
+  // on message length, attachments and everything else the person has done in
+  // the window. So this reports two things: the relative cost, which is exact
+  // arithmetic, and a rough runs-per-window figure clearly marked as an
+  // estimate. It never states a percentage of an allowance, because that
+  // number is not knowable from here.
+  var PLAN_WINDOW_TOKENS = {
+    // Rough working figures for a 5-hour window, derived from widely reported
+    // message counts. Deliberately given as ranges in the UI.
+    free: 45000,
+    pro:  200000,
+    max5: 1000000
+  };
+
+  function baselineRun() {
+    var out = 0;
+    Object.keys(SECTION_COST).forEach(function (k) {
+      if (k === 'COMPANY RED FLAGS' || k === 'COMPANY FINANCIALS' || k === 'SALARY') return;
+      out += SECTION_COST[k];
+    });
+    return out + PROMPT_SCAFFOLD + 1750;   // + a typical CV and posting
+  }
+
+  function runsPerWindow(tokensPerRun, planTokens) {
+    var n = Math.floor(planTokens / tokensPerRun);
+    if (n < 1) return '<1';
+    // Reported figures vary by a factor of two or so, so show a band rather
+    // than a falsely precise single number.
+    var lo = Math.max(1, Math.floor(n * 0.6));
+    var hi = Math.ceil(n * 1.2);
+    return lo + '\u2013' + hi;
+  }
+
+  function renderCostDetail() {
+    var base = baselineRun();
+    var e = estimateRun();
+    var total = (cvEl.value.trim() && postingEl.value.trim()) ? e.total : base;
+
+    $('t-costintro').textContent = T().costIntro;
+
+    var cmp = $('cost-compare');
+    cmp.innerHTML = '';
+    [
+      [T().costBasic, base, false],
+      [T().costWithResearch, base + optionCost('research'), optResearch.checked],
+      [T().costWithSalary, base + optionCost('salary'), optSalary.checked],
+      [T().costWithBoth, base + optionCost('research') + optionCost('salary'),
+        optResearch.checked && optSalary.checked]
+    ].forEach(function (row) {
+      var el = document.createElement('div');
+      el.className = 'cost-row' + (row[2] ? ' on' : '');
+      var name = document.createElement('span');
+      name.textContent = row[0];
+      var val = document.createElement('span');
+      val.className = 'cost-val';
+      var mult = Math.round((row[1] / base) * 10) / 10;
+      val.textContent = fmtTokens(row[1]) + '  \u00b7  ' + T().costTimes(mult);
+      el.appendChild(name); el.appendChild(val);
+      cmp.appendChild(el);
+    });
+
+    $('t-costplans').textContent = T().costPlans;
+
+    var plans = $('cost-plans');
+    plans.innerHTML = '';
+    [['free', T().planFree], ['pro', T().planPro], ['max5', T().planMax]].forEach(function (pl) {
+      var el = document.createElement('div');
+      el.className = 'cost-row';
+      var name = document.createElement('span');
+      name.textContent = pl[1];
+      var val = document.createElement('span');
+      val.className = 'cost-val';
+      val.textContent = T().costRuns(runsPerWindow(total, PLAN_WINDOW_TOKENS[pl[0]]));
+      el.appendChild(name); el.appendChild(val);
+      plans.appendChild(el);
+    });
+
+    $('t-costcaveat').textContent = T().costCaveat;
+  }
+
+  function updateCost() {
+    updateOptionCosts();
+    renderCostDetail();
+    if (!cvEl.value.trim() || !postingEl.value.trim()) { costEl.textContent = ''; return; }
+    var e = estimateRun();
+    costEl.textContent = T().costLine(fmtTokens(e.total), e.searches);
+    updateOptionCosts();
+    renderCostDetail();
+  }
+
+
+  // ---------- Main ----------
+  goBtn.addEventListener('click', function () {
+    clearError();
+    var cv = cvEl.value.trim(), posting = postingEl.value.trim();
+    if (!cv) { showError(T().errNoCv); return; }
+    if (!posting) { showError(T().errNoPosting); return; }
+
+    currentCv = cv;
+    currentCompany = companyEl.value.trim();
+    currentPosting = posting;
+    currentLocation = locationEl.value.trim();
+
+    goBtn.disabled = true;
+    roleSlot.innerHTML = ''; zoneMaterials.innerHTML = ''; zoneIntel.innerHTML = ''; zonePractice.innerHTML = '';
+    startSteps();
+
+    var wantResearch = optResearch.checked;
+    var wantSalary = optSalary.checked;
+
+    var prompt = '<candidate_cv>\n' + cv + '\n</candidate_cv>\n\n' +
+      '<target_job_posting>\n' + posting + '\n</target_job_posting>\n\n' +
+      'The role being applied for is defined ONLY by the content inside <target_job_posting>. ' +
+      'The <candidate_cv> may contain job titles from the candidate\u2019s past or current roles (for example "Group Design Leader") \u2014 those are history, NOT the role being applied for, even when a CV title resembles or overlaps the target role\u2019s title or department. Never substitute a title from the CV for the target role.\n' +
+      'If the posting is a URL, use web search to fetch it, and make sure you are reading one specific job listing \u2014 not a careers page listing several open roles, and not a neighbouring posting on the same page. Read the exact job title from that specific listing.\n' +
+      'If you cannot actually retrieve the posting \u2014 the page is behind a login, blocked, expired, or the fetch fails \u2014 do NOT guess the role from the URL text, the URL slug, or the company name, and do not produce the other sections. Instead reply with only this, and nothing else:\n' +
+      'ROLE CONFIRMATION: Could not read the posting at that link. Open the posting, copy its text, and paste it into the job posting box instead.\n\n' +
+      'Company for this application: "' + (currentCompany || 'the company named in the posting') + '"\n\n' +
+      'Produce these sections, in this order' + ((wantResearch || wantSalary || containsUrl(posting)) ? ', using web search where research is needed' : '') + ':\n' +
+      'ROLE CONFIRMATION: Two lines. First: the exact target job title and department, as "Applying for: [Job Title] \u2014 [Department, if stated] at [Company]". Must match the target posting, never a CV title. Second line exactly: "Written in: [language]" naming the language you are writing the rest of this response in, and for the posting say whether the posting itself is in that language.\n' +
+      'TAILORED CV: Rewrite the CV for the target posting. Mirror the posting\u2019s exact keywords, titles and required skills where truthfully applicable. Ground everything in real experience from the CV \u2014 invent nothing, and do not relabel past roles to match the target title. Standard section headers.\n' +
+      'Weight the roles unevenly. A real CV is lopsided: the role closest to this posting carries the most detail, and an old or unrelated one may be a single line, or just title, employer and dates with nothing under it. Give the most relevant role four to six bullets, a middling one two or three, and the oldest or least relevant none at all. Never give every role the same number of bullets.\n' +
+      'Vary the bullets themselves. Some should be short, six or seven words. Others run to twenty or more because the detail earns it. Do not open every bullet with a past-tense verb, and do not repeat the same clause shape down the list. Uniform bullets in uniform blocks is the clearest sign a CV was machine written.\n' +
+      'COVER LETTER: Under 250 words, specific to this role, grounded only in real background. No placeholder brackets; use "Dear Hiring Manager" if no name is known.\n' +
+      'ATS MATCH SCORE: A percentage (e.g. "72%") on the first line, then which required terms are present and which are missing.\n' +
+      'SKILLS GAP: Specific skills, tools or qualifications the posting wants that are missing or unclear in the CV. Direct and specific. Say so if there is no meaningful gap.\n' +
+      'TONE CHECK: Flag if the CV or letter above drifted into generic AI-sounding language (buzzwords like "leverage", "results-driven", repetitive rhythm, dashes used where a comma belongs). Say plainly if the roles are too even in length or the bullets too uniform in shape, and name which roles should be cut back or expanded.. Say so plainly if they read naturally.\n' +
+      (wantResearch
+        ? 'COMPANY RED FLAGS: Search recent employee reviews, sentiment, layoffs, controversies or complaints. Summarise honestly; say if nothing significant surfaced.\n' +
+          'COMPANY FINANCIALS: Search recent revenue, growth, funding or financial health. Note if the company is private and figures are unavailable.\n'
+        : '') +
+      (wantSalary
+        ? 'SALARY: Search for a realistic market pay range for this role, at this level, in this location' + (currentLocation ? ' (' + currentLocation + ')' : ' (location not given \u2014 say so and give a broader range)') + '. State the range with the currency, say plainly how reliable the data is and where it broadly comes from, and note if the posting itself states a range. Then give 3-4 concrete talking points for discussing pay, grounded in this candidate\u2019s actual experience.\n'
+        : '') +
+      'POSITIONS: A numbered list of the roles found in the candidate\u2019s CV, one per line, each as "Title, Employer (dates)" exactly as the CV gives them. No commentary. If the CV lists no clear roles, write "none".\n' +
+      'CONFIDENCE: Where this output is weak, in plain language, as short bullet lines. Report only genuine uncertainty from THIS run, for example: the posting could not be retrieved or was thin on detail; a required skill has no clear evidence in the CV so the match score is a rough read; salary figures came from sparse or dated sources, or none were found; company research turned up little; you inferred seniority, team or scope that the posting did not state; a claim in the tailored CV rests on one line of the original and may overstate it.\n' +
+      'Do not manufacture doubt to fill this section and do not list generic caveats about AI. If everything here rested on solid ground, say exactly that in one line. Never list an uncertainty you have not actually encountered in this run.\n' +
+      'Use these exact section headers: ROLE CONFIRMATION / TAILORED CV / COVER LETTER / ATS MATCH SCORE / SKILLS GAP / TONE CHECK / CONFIDENCE' +
+      (wantResearch ? ' / COMPANY RED FLAGS / COMPANY FINANCIALS' : '') +
+      (wantSalary ? ' / SALARY' : '') +
+      '. Plain text, no markdown symbols.\n\n' +
+      'Write without em dashes or en dashes as sentence punctuation. Use a comma, a full stop, or brackets instead. A dash between numbers in a date range is fine. This matters because a dash used that way is one of the clearest signs a document was machine written, and the point of this CV is that it reads as the candidate\u2019s own.\n' +
+      'CRITICAL: keep the section header lines themselves in English, exactly as listed above \u2014 they are parsed by software. ' +
+      langInstruction();
+
+    var keys = ['ROLE CONFIRMATION', 'TAILORED CV', 'COVER LETTER', 'ATS MATCH SCORE', 'SKILLS GAP', 'TONE CHECK', 'POSITIONS', 'CONFIDENCE', 'INTERVIEW TIPS', 'COMPANY RED FLAGS', 'COMPANY FINANCIALS', 'SALARY', 'INTERVIEW QUESTIONS'];
+
+    // Web search costs real tokens, so only enable it when something needs it.
+    // Any URL in the posting field counts, whatever the toggles say.
+    var needsSearch = wantResearch || wantSalary || containsUrl(posting);
+
+    callClaude(prompt, needsSearch).then(function (text) {
+      stopSteps();
+      goBtn.disabled = false;
+
+      // Clear the per-job fields so the next run can't silently inherit the
+      // previous company or location. The CV is deliberately kept.
+      companyEl.value = '';
+      locationEl.value = '';
+      postingEl.value = '';
+
+      renderPackage(text, { live: true });
+      saveRun(text, currentCompany, currentPosting, currentLocation);
+
+    }).catch(function () {
+      stopSteps();
+      goBtn.disabled = false;
+      showError(T().errRequest);
+    });
+  });
+
+  loadHistory();
+  applyLanguage();
+  outLangEl.addEventListener('change', function () {
+    if (window.storage) window.storage.set('outlang', outLangEl.value, false).catch(function () {});
+  });
+  if (window.storage) {
+    window.storage.get('outlang', false).then(function (r) {
+      if (r && r.value) outLangEl.value = r.value;
+    }).catch(function () {});
+  }
+  langEn.addEventListener('click', function () { setLang('en'); });
+  langSv.addEventListener('click', function () { setLang('sv'); });
+  if (window.storage) {
+    window.storage.get('lang', false).then(function (r) {
+      if (r && r.value && STRINGS[r.value] && r.value !== lang) setLang(r.value);
+    }).catch(function () {});
+  }
+  updateCost();
+  ['input', 'change'].forEach(function (ev) {
+    cvEl.addEventListener(ev, updateCost);
+    postingEl.addEventListener(ev, updateCost);
+    postingEl.addEventListener(ev, updatePostingWarning);
+  });
+  optResearch.addEventListener('change', updateCost);
+  optSalary.addEventListener('change', updateCost);
+})();
+</script>

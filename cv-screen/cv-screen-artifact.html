@@ -1,0 +1,2248 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
+
+  #cs {
+    --ink: #16212b; --ink-soft: #55636f; --ink-faint: #8a949e;
+    --paper: #f4f5f3; --card: #ffffff; --rule: #dde0dc;
+    --accent: #1a6b66; --amber: #96650d; --red: #9c3025;
+    --serif: 'Newsreader', Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-family: var(--sans); color: var(--ink); background: var(--paper);
+    max-width: 660px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; line-height: 1.55;
+  }
+  @media (prefers-color-scheme: dark) {
+    #cs {
+      --ink: #e8eae7; --ink-soft: #a3aeb8; --ink-faint: #78838d;
+      --paper: #131a21; --card: #1b242c; --rule: #2c3841;
+      --accent: #5cb8b1; --amber: #d8a341; --red: #e08376;
+    }
+  }
+  #cs * { box-sizing: border-box; }
+
+  #cs .masthead { border-bottom: 1px solid var(--rule); padding-bottom: 1rem; margin-bottom: 1.75rem; }
+  #cs h1 { font-family: var(--serif); font-size: 30px; font-weight: 500; letter-spacing: -0.01em; margin: 0 0 4px; }
+  #cs .masthead p { font-size: 14px; color: var(--ink-soft); margin: 0; max-width: 54ch; }
+  #cs .lang { display: flex; margin-top: 12px; }
+  #cs .lang-btn {
+    font-family: var(--sans); font-size: 12px; color: var(--ink-faint);
+    background: transparent; border: 1px solid var(--rule);
+    padding: 4px 12px; cursor: pointer; margin-left: -1px;
+  }
+  #cs .lang-btn:first-child { margin-left: 0; border-radius: 3px 0 0 3px; }
+  #cs .lang-btn:last-child { border-radius: 0 3px 3px 0; }
+  #cs .lang-btn.on {
+    color: var(--ink); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    position: relative; z-index: 1; font-weight: 500;
+  }
+  #cs .lang-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; z-index: 2; }
+
+  #cs label.field-label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; }
+  #cs .field { margin-bottom: 1.25rem; }
+  #cs .hint { font-size: 12px; color: var(--ink-faint); font-weight: 400; }
+  #cs textarea, #cs input[type="text"] {
+    width: 100%; font-family: var(--sans); font-size: 14px; line-height: 1.5;
+    color: var(--ink); background: var(--card); border: 1px solid var(--rule);
+    border-radius: 4px; padding: 10px 12px; resize: vertical;
+  }
+  #cs textarea:focus, #cs input[type="text"]:focus {
+    outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent);
+  }
+
+  #cs .dropzone {
+    border: 1px dashed var(--rule); border-radius: 4px; background: var(--card);
+    transition: border-color .15s, background .15s;
+  }
+  #cs .dropzone.dragging {
+    border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--card));
+  }
+  #cs .dropzone textarea { border: none; background: transparent; border-radius: 0; }
+  #cs .dropzone textarea:focus { outline: none; }
+  #cs .dz-foot {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 0 12px 10px; font-size: 12px; color: var(--ink-faint);
+  }
+  @media (pointer: coarse) { #cs .dz-foot { flex-direction: row-reverse; justify-content: flex-end; } }
+  #cs .dz-foot button, #cs .ghost {
+    font-family: var(--sans); font-size: 12.5px; color: var(--ink);
+    background: transparent; border: 1px solid var(--rule); border-radius: 4px;
+    min-height: 44px; padding: 0 16px; cursor: pointer;
+  }
+  #cs .ghost { min-height: 38px; padding: 6px 12px; }
+  #cs .ghost:hover, #cs .dz-foot button:hover { border-color: var(--ink-faint); }
+  #cs .ghost:focus-visible, #cs .dz-foot button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  #cs .tpl-empty { padding: 18px 14px; text-align: center; }
+  #cs .tpl-prompt { font-size: 13px; color: var(--ink-faint); margin: 0 0 10px; }
+  #cs .tpl-loaded { padding: 14px; }
+  #cs .tpl-name { font-size: 14px; font-weight: 500; margin: 0 0 4px; }
+  #cs .tpl-clear {
+    background: none; border: none; color: var(--ink-faint);
+    font-size: 17px; line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  #cs .tpl-clear:hover { color: var(--red); }
+  #cs .tpl-sections { font-size: 12px; color: var(--ink-faint); margin: 0; }
+  #cs .note { font-size: 12px; color: var(--ink-faint); margin: 9px 0 0; max-width: 56ch; }
+
+  #cs .primary {
+    width: 100%; font-family: var(--sans); font-size: 15px; font-weight: 500;
+    color: #fff; background: var(--ink); border: none; border-radius: 4px;
+    padding: 13px; cursor: pointer;
+  }
+  @media (prefers-color-scheme: dark) { #cs .primary { color: var(--paper); background: var(--accent); } }
+  #cs .primary:disabled { opacity: .45; cursor: default; }
+  #cs .primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  #cs .msg { font-size: 13.5px; margin: 10px 0 0; }
+  #cs .msg.err { color: var(--red); }
+  #cs .cost { font-size: 12px; color: var(--ink-faint); text-align: center; margin: 9px 0 0; }
+  #cs .cost:empty { margin: 0; }
+  #cs .privacy { font-size: 12px; color: var(--ink-faint); text-align: center; margin: 9px 0 0; }
+
+  #cs #steps { margin-top: 1.5rem; display: none; }
+  #cs .elapsed { font-family: var(--serif); font-size: 17px; margin: 0; text-align: center; }
+  #cs .elapsed-note { font-size: 12.5px; color: var(--ink-faint); margin: 5px 0 0; text-align: center; }
+
+  #cs .zone { margin-top: 2.25rem; }
+  #cs .zone-head {
+    font-family: var(--serif); font-size: 13px; font-weight: 600; letter-spacing: .02em;
+    color: var(--ink-soft); border-bottom: 1px solid var(--rule);
+    padding-bottom: 6px; margin: 0;
+  }
+  #cs details.sec { border-bottom: 1px solid var(--rule); }
+  #cs details.sec > summary {
+    cursor: pointer; list-style: none; padding: 13px 2px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    font-family: var(--serif); font-size: 17px; font-weight: 500;
+  }
+  #cs details.sec > summary::-webkit-details-marker { display: none; }
+  #cs details.sec > summary::after {
+    content: ''; width: 7px; height: 7px;
+    border-right: 1.5px solid var(--ink-faint); border-bottom: 1.5px solid var(--ink-faint);
+    transform: rotate(45deg) translateY(-2px); flex: none; transition: transform .15s;
+  }
+  #cs details.sec[open] > summary::after { transform: rotate(-135deg) translateY(-2px); }
+  #cs .sec-body {
+    padding: 0 2px 16px; font-size: 14.5px; line-height: 1.62;
+    white-space: pre-wrap; max-width: 68ch;
+  }
+  #cs .sec-body.editable {
+    outline: 1px dashed transparent; border-radius: 3px;
+    padding: 4px 6px; margin-left: -6px;
+    transition: outline-color .15s, background .15s;
+  }
+  #cs .sec-body.editable:hover { outline-color: var(--rule); }
+  #cs .sec-body.editable:focus {
+    outline: 1px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 4%, transparent);
+  }
+  #cs .edited-flag { font-family: var(--sans); font-size: 11px; font-weight: 400; color: var(--ink-faint); margin-left: 8px; }
+  #cs .sec-actions { display: flex; gap: 8px; padding: 0 2px 16px; flex-wrap: wrap; }
+  #cs .conf-sec > summary { color: var(--amber); }
+  #cs .conf-sec .sec-body { color: var(--ink-soft); }
+
+  #cs .tpl-picker { padding: 0 2px 18px; }
+  #cs .tpl-row { display: flex; gap: 0; margin-bottom: 7px; }
+  #cs .tpl {
+    font-family: var(--sans); font-size: 12.5px; color: var(--ink-soft);
+    background: transparent; border: 1px solid var(--rule);
+    padding: 6px 13px; cursor: pointer; margin-left: -1px;
+  }
+  #cs .tpl:first-child { margin-left: 0; border-radius: 3px 0 0 3px; }
+  #cs .tpl:last-child { border-radius: 0 3px 3px 0; }
+  #cs .tpl.on {
+    color: var(--ink); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    position: relative; z-index: 1; font-weight: 500;
+  }
+  #cs .tpl-note { font-size: 12px; color: var(--ink-faint); margin: 0 0 11px; max-width: 46ch; }
+
+  #cs .score-block { padding: 18px 2px 20px; }
+  #cs .score-row { display: flex; align-items: baseline; gap: 12px; }
+  #cs .score-num { font-family: var(--serif); font-size: 62px; line-height: .85; font-weight: 500; letter-spacing: -.02em; }
+  #cs .score-cap { font-size: 13px; color: var(--ink-soft); max-width: 22ch; }
+  #cs .meter { display: flex; gap: 3px; margin: 14px 0 12px; }
+  #cs .meter i { height: 5px; flex: 1; border-radius: 1px; background: var(--rule); }
+  #cs .meter i.on { background: currentColor; }
+  #cs .score-detail { font-size: 14px; line-height: 1.6; white-space: pre-wrap; max-width: 68ch; }
+
+  #cs .ask-lead { font-size: 12.5px; color: var(--ink-faint); margin: 12px 0; max-width: 60ch; }
+  #cs .ask-item { border-bottom: 1px solid var(--rule); padding: 10px 2px; }
+  #cs .ask-q { font-size: 13.5px; font-weight: 500; margin: 0 0 6px; }
+  #cs .ask-a { font-size: 13.5px; line-height: 1.6; margin: 0; white-space: pre-wrap; max-width: 66ch; }
+  #cs .ask-row { display: flex; gap: 8px; }
+  #cs .ask-input {
+    flex: 1; min-width: 0; font-family: var(--sans); font-size: 14px;
+    padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px;
+    background: var(--card); color: var(--ink);
+  }
+  #cs .ask-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  #cs .ask-send { flex: none; min-height: 42px; }
+  #cs .ask-suggestions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  #cs .ask-chip {
+    font-family: var(--sans); font-size: 12px; color: var(--ink-soft);
+    background: transparent; border: 1px solid var(--rule);
+    border-radius: 20px; padding: 5px 11px; cursor: pointer;
+  }
+  #cs .ask-chip:hover { border-color: var(--ink-faint); color: var(--ink); }
+
+  #cs .modes { display: flex; margin-bottom: 1.5rem; }
+  #cs .mode-btn {
+    font-family: var(--sans); font-size: 12.5px; color: var(--ink-faint);
+    background: transparent; border: 1px solid var(--rule);
+    padding: 7px 14px; cursor: pointer; margin-left: -1px;
+  }
+  #cs .mode-btn:first-child { margin-left: 0; border-radius: 3px 0 0 3px; }
+  #cs .mode-btn:last-child { border-radius: 0 3px 3px 0; }
+  #cs .mode-btn.on {
+    color: var(--ink); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    position: relative; z-index: 1; font-weight: 500;
+  }
+  #cs select {
+    width: 100%; font-family: var(--sans); font-size: 14px; color: var(--ink);
+    background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 10px 12px;
+  }
+  #cs .batch-list { padding: 0 14px 12px; }
+  #cs .batch-file { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 3px; }
+  #cs .batch-file.more { color: var(--ink-faint); font-style: italic; }
+  #cs .oversight {
+    border-left: 2px solid var(--amber); padding: 2px 0 2px 14px; margin: 0 0 1.25rem;
+  }
+  #cs .oversight-title { font-size: 13.5px; font-weight: 500; margin: 0 0 4px; }
+  #cs .oversight-body { font-size: 12.5px; color: var(--ink-soft); margin: 0; line-height: 1.55; max-width: 62ch; }
+  #cs .batch-progress { margin-top: 1.25rem; }
+  #cs .progress-track { height: 4px; background: var(--rule); border-radius: 2px; margin: 10px 0 6px; overflow: hidden; }
+  #cs .progress-bar { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+  #cs .rank-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 2px; border-bottom: 1px solid var(--rule);
+  }
+  #cs .rank-row.short { background: color-mix(in srgb, var(--accent) 4%, transparent); }
+  #cs .rank-row input { margin: 3px 0 0; flex: none; accent-color: var(--accent); }
+  #cs .rank-score {
+    font-family: var(--serif); font-size: 19px; font-weight: 500;
+    flex: none; width: 2.2rem; text-align: right;
+  }
+  #cs .rank-mid { flex: 1; min-width: 0; }
+  #cs .rank-name { font-size: 14px; font-weight: 500; margin: 0 0 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #cs .rank-why { font-size: 12.5px; color: var(--ink-faint); margin: 0; line-height: 1.5; }
+
+  #cs .step-tag {
+    font-size: 12px; color: var(--accent); font-weight: 500;
+    margin: 12px 0 0; letter-spacing: .01em;
+  }
+  #cs .step-tag.step-two {
+    color: var(--ink-soft); font-weight: 400;
+    margin: 22px 0 8px; max-width: 60ch; line-height: 1.5;
+  }
+
+  #cs .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 0 0 14px; }
+  #cs .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-soft); }
+  #cs .matrix-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  #cs table.matrix { border-collapse: separate; border-spacing: 2px; font-size: 12px; }
+  #cs .matrix-corner, #cs .matrix-name {
+    position: sticky; left: 0; z-index: 2;
+    background: var(--paper); text-align: left; font-weight: 500;
+    padding: 4px 10px 4px 2px; max-width: 11rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  #cs .matrix-corner { font-size: 11px; color: var(--ink-faint); font-weight: 400; }
+  #cs .matrix-name { font-size: 12.5px; }
+  #cs th.matrix-req {
+    /* Vertical headings keep the table readable with ten requirements. */
+    height: 7.5rem; vertical-align: bottom; padding: 0 0 6px;
+    font-weight: 400; color: var(--ink-soft); white-space: nowrap;
+  }
+  #cs th.matrix-req span {
+    display: block; writing-mode: vertical-rl; transform: rotate(180deg);
+    max-height: 7rem; overflow: hidden; text-overflow: ellipsis;
+  }
+  #cs td.cell, #cs .legend .cell {
+    width: 1.9rem; min-width: 1.9rem; height: 1.7rem;
+    text-align: center; vertical-align: middle;
+    border-radius: 3px; font-size: 10.5px; font-weight: 600; letter-spacing: .02em;
+  }
+  #cs .legend .cell { display: inline-flex; align-items: center; justify-content: center; }
+  #cs .cell-M { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); }
+  #cs .cell-A { background: color-mix(in srgb, var(--amber) 22%, transparent); color: var(--amber); }
+  #cs .cell-N { background: color-mix(in srgb, var(--red) 14%, transparent); color: var(--red); }
+  #cs .matrix-notes-head { font-size: 12.5px; font-weight: 500; margin: 16px 0 6px; }
+  #cs .matrix-note { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 4px; line-height: 1.5; }
+
+  @media (prefers-reduced-motion: reduce) { #cs *, #cs *::after { transition: none !important; } }
+</style>
+
+<div id="cs">
+
+  <div class="masthead">
+    <h1 id="t-title">CV screen</h1>
+    <p id="t-sub">Reformat a candidate CV into your template, and see what the client will question.</p>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" class="lang-btn on" id="lang-en" aria-pressed="true">English</button>
+      <button type="button" class="lang-btn" id="lang-sv" aria-pressed="false">Svenska</button>
+    </div>
+  </div>
+
+  <div class="modes" role="group" aria-label="Mode">
+    <button type="button" class="mode-btn on" id="mode-one" aria-pressed="true">One candidate</button>
+    <button type="button" class="mode-btn" id="mode-many" aria-pressed="false">Screen a batch</button>
+  </div>
+
+  <div id="batch-panel" style="display:none;">
+    <div class="field">
+      <label class="field-label" id="t-batchlabel">Candidate CVs</label>
+      <div id="batch-dropzone" class="dropzone">
+        <div class="tpl-empty">
+          <p id="t-batchprompt" class="tpl-prompt">Drop a folder of PDF or Word CVs here, or choose several files</p>
+          <button type="button" id="batch-pick" class="ghost">Choose files</button>
+          <input id="batch-file" type="file" multiple style="display:none;" />
+        </div>
+        <div id="batch-list" class="batch-list"></div>
+      </div>
+      <p id="batch-readnote" class="note"></p>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="batch-brief" id="t-batchbrieflabel">The role or client brief</label>
+      <textarea id="batch-brief" rows="6"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="shortlist-size" id="t-shortlistlabel">Shortlist size</label>
+      <select id="shortlist-size">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+      </select>
+    </div>
+
+    <div id="oversight" class="oversight">
+      <p id="t-oversighttitle" class="oversight-title">This ranks CVs. It does not decide anything.</p>
+      <p id="t-oversightbody" class="oversight-body"></p>
+    </div>
+
+    <p id="batch-error" class="msg err" style="display:none;"></p>
+    <button id="go-batch" class="primary">Screen these CVs</button>
+    <p id="batch-cost" class="cost"></p>
+
+    <div id="batch-progress" class="batch-progress" style="display:none;">
+      <p id="batch-progress-label" class="elapsed"></p>
+      <div class="progress-track"><div id="batch-progress-bar" class="progress-bar"></div></div>
+      <p id="batch-progress-note" class="elapsed-note"></p>
+    </div>
+
+    <div id="batch-output"></div>
+  </div>
+
+  <div id="one-panel">
+
+  <div class="field">
+    <label class="field-label" for="tpl-file"><span id="t-tpllabel">Your CV template</span> <span class="hint" id="tpl-saved"></span></label>
+    <div id="tpl-dropzone" class="dropzone">
+      <div id="tpl-empty" class="tpl-empty">
+        <p id="t-tplprompt" class="tpl-prompt">Drop a Word or PDF copy of your house CV template here</p>
+        <button type="button" id="tpl-pick" class="ghost">Choose a file</button>
+      </div>
+      <div id="tpl-loaded" class="tpl-loaded" style="display:none;">
+        <p class="tpl-name"><span id="tpl-filename"></span> <button type="button" id="tpl-clear" class="tpl-clear" aria-label="Remove template">&times;</button></p>
+        <p id="tpl-sections" class="tpl-sections"></p>
+      </div>
+      <input id="tpl-file" type="file" style="display:none;" />
+    </div>
+    <p id="t-tplnote" class="note">Read once and kept in your browser. Its section order and headings are matched; fonts and logos are not reproduced, so paste the result into your own file for final branding.</p>
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="cand" id="t-candlabel">Candidate CV</label>
+    <div id="cand-dropzone" class="dropzone">
+      <textarea id="cand" rows="8"></textarea>
+      <div class="dz-foot">
+        <span id="cand-hint">PDF or .docx</span>
+        <button type="button" id="cand-pick">Choose a file</button>
+        <input id="cand-file" type="file" style="display:none;" />
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="brief" id="t-brieflabel">The role or client brief</label>
+    <textarea id="brief" rows="6"></textarea>
+  </div>
+
+  <p id="error" class="msg err" style="display:none;"></p>
+  <button id="go" class="primary">Prepare submission</button>
+  <p id="cost" class="cost"></p>
+  <p class="privacy" id="t-privacy">Files are read on your device. Nothing is stored on a server.</p>
+
+  <div id="steps">
+    <p id="elapsed-label" class="elapsed"></p>
+    <p id="elapsed-note" class="elapsed-note"></p>
+  </div>
+
+  <div id="output"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js"></script>
+<script>
+(function () {
+  if (window.pdfjsLib) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  var $ = function (id) { return document.getElementById(id); };
+var HEADING_WORDS = /^(professional\s+)?(summary|profile|objective|experience|work\s+experience|professional\s+experience|employment|employment\s+history|education|skills|technical\s+skills|core\s+competencies|competencies|certifications|licenses|projects|publications|awards|achievements|languages|interests|volunteer|references|contact|additional\s+information)\b/i;
+
+function looksLikeHeading(line) {
+    var t = line.trim();
+    if (!t || t.length > 48) return false;
+    if (/[.!?]$/.test(t)) return false;
+    if (HEADING_WORDS.test(t)) return true;
+    // Short all-caps lines are headings, but only if they contain letters
+    // (guards against a line of dashes or numbers).
+    if (/[A-Za-z]/.test(t) && t === t.toUpperCase() && t.length <= 32) return true;
+    return false;
+  }
+
+function looksLikeBullet(line) {
+    return /^\s*[-\u2022\u2013*\u00b7]\s+/.test(line);
+  }
+
+function stripBullet(line) {
+    return line.replace(/^\s*[-\u2022\u2013*\u00b7]\s+/, '').trim();
+  }
+
+function looksLikeContact(line) {
+    var t = line.trim();
+    if (!t || t.length > 120) return false;
+    return /@|\+\d|\(\d{3}\)|\bhttps?:\/\/|linkedin|github|\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b/i.test(t);
+  }
+
+function parseCvStructure(text) {
+    var lines = String(text || '').split(/\r?\n/);
+    var name = '', contact = [], blocks = [];
+    var i = 0;
+
+    // First non-empty line is the name, unless it already looks like a heading.
+    while (i < lines.length && !lines[i].trim()) i++;
+    if (i < lines.length && !looksLikeHeading(lines[i]) && !looksLikeContact(lines[i])) {
+      name = lines[i].trim();
+      i++;
+    }
+
+    // Immediately following short non-heading lines are treated as contact info.
+    while (i < lines.length) {
+      var l = lines[i].trim();
+      if (!l) { i++; continue; }
+      if (looksLikeHeading(l)) break;
+      if (looksLikeContact(l) || (contact.length < 2 && l.length <= 90 && !looksLikeBullet(l))) {
+        contact.push(l);
+        i++;
+        continue;
+      }
+      break;
+    }
+
+    for (; i < lines.length; i++) {
+      var raw = lines[i];
+      var t = raw.trim();
+      if (!t) { blocks.push({ type: 'space' }); continue; }
+      if (looksLikeHeading(t)) blocks.push({ type: 'heading', text: t });
+      else if (looksLikeBullet(t)) blocks.push({ type: 'bullet', text: stripBullet(t) });
+      else blocks.push({ type: 'text', text: t });
+    }
+
+    // Collapse runs of blank lines.
+    var out = [], lastSpace = false;
+    blocks.forEach(function (b) {
+      if (b.type === 'space') { if (!lastSpace) out.push(b); lastSpace = true; }
+      else { out.push(b); lastSpace = false; }
+    });
+
+    return { name: name, contact: contact, blocks: out };
+  }
+
+function templateSections(text) {
+    // A template's headings are the company's own vocabulary ("Key skills",
+    // "Assignment history"), so the CV heading list is too narrow here. Use
+    // shape instead: a short capitalised line, no terminal punctuation, not a
+    // placeholder, not a bullet.
+    var lines = String(text || '').split(/\r?\n/);
+    var found = [];
+    lines.forEach(function (l) {
+      var t = l.trim();
+      if (!t || t.length > 40) return;
+      if (/[.!?,;:]$/.test(t)) return;
+      var f0 = t.charAt(0);
+      // Skip placeholders like [Name], <role>, (dates) or {field}. Written as
+      // character comparisons rather than a regex class, because a brace inside
+      // a pattern confuses simple source-extraction tooling.
+      if (f0 === '[' || f0 === '<' || f0 === '(' || f0 === '\u007b') return;
+      if (looksLikeBullet(t)) return;
+      if (!/[A-Za-z\u00c0-\u017f]/.test(t)) return;
+      var words = t.split(/\s+/);
+      if (words.length > 5) return;
+      var first = t.charAt(0);
+      if (first !== first.toUpperCase()) return;   // must start capitalised
+      if (found.indexOf(t) === -1) found.push(t);
+    });
+    return found;
+  }
+
+var TEMPLATES = {
+    classic: {
+      labelKey: 'tplClassic', noteKey: 'tplClassicNote',
+      font: 'times',
+      margin: 64,
+      nameSize: 20, nameAlign: 'center', nameStyle: 'normal',
+      contactSize: 9.5, contactAlign: 'center',
+      headingSize: 11.5, headingStyle: 'bold', headingCaps: true, headingRule: false,
+      bodySize: 10.5, lineHeight: 14, headingGapBefore: 15, headingGapAfter: 7
+    },
+    modern: {
+      labelKey: 'tplModern', noteKey: 'tplModernNote',
+      font: 'helvetica',
+      margin: 58,
+      nameSize: 22, nameAlign: 'left', nameStyle: 'bold',
+      contactSize: 9.5, contactAlign: 'left',
+      headingSize: 11, headingStyle: 'bold', headingCaps: true, headingRule: true,
+      bodySize: 10.5, lineHeight: 14.5, headingGapBefore: 17, headingGapAfter: 9
+    },
+    compact: {
+      labelKey: 'tplCompact', noteKey: 'tplCompactNote',
+      font: 'helvetica',
+      margin: 46,
+      nameSize: 17, nameAlign: 'left', nameStyle: 'bold',
+      contactSize: 8.5, contactAlign: 'left',
+      headingSize: 9.5, headingStyle: 'bold', headingCaps: true, headingRule: false,
+      bodySize: 9.5, lineHeight: 11.5, headingGapBefore: 10, headingGapAfter: 5
+    }
+  };
+
+function renderCvPdf(doc, cv, tpl, pageW, pageH) {
+    var m = tpl.margin;
+    var maxW = pageW - m * 2;
+    var y = m;
+    var wrote = 0;
+
+    function ensureRoom(needed) {
+      if (y + needed > pageH - m) { doc.addPage(); y = m; return true; }
+      return false;
+    }
+
+    function put(text, size, style, align, gap) {
+      doc.setFont(tpl.font, style);
+      doc.setFontSize(size);
+      var lines = doc.splitTextToSize(text.length ? text : ' ', maxW);
+      if (!lines || !lines.length) lines = [' '];
+      lines.forEach(function (line) {
+        ensureRoom(gap);
+        var x = m;
+        if (align === 'center') x = pageW / 2;
+        doc.text(String(line), x, y, align === 'center' ? { align: 'center' } : undefined);
+        y += gap;
+        wrote++;
+      });
+    }
+
+    // Name
+    if (cv.name) {
+      put(cv.name, tpl.nameSize, tpl.nameStyle, tpl.nameAlign, tpl.nameSize + 6);
+      y += 2;
+    }
+
+    // Contact
+    if (cv.contact.length) {
+      cv.contact.forEach(function (c) {
+        put(c, tpl.contactSize, 'normal', tpl.contactAlign, tpl.contactSize + 3.5);
+      });
+      y += 6;
+    }
+
+    cv.blocks.forEach(function (b) {
+      if (b.type === 'space') { y += tpl.lineHeight * 0.45; return; }
+
+      if (b.type === 'heading') {
+        y += tpl.headingGapBefore;
+        var label = tpl.headingCaps ? b.text.toUpperCase() : b.text;
+        ensureRoom(tpl.headingSize + 4);
+        doc.setFont(tpl.font, tpl.headingStyle);
+        doc.setFontSize(tpl.headingSize);
+        doc.text(label, m, y);
+        wrote++;
+        y += 4;
+        if (tpl.headingRule) {
+          doc.setDrawColor(150);
+          doc.setLineWidth(0.5);
+          doc.line(m, y, pageW - m, y);
+        }
+        y += tpl.headingGapAfter;
+        return;
+      }
+
+      if (b.type === 'bullet') {
+        doc.setFont(tpl.font, 'normal');
+        doc.setFontSize(tpl.bodySize);
+        var indent = 12;
+        var lines = doc.splitTextToSize(b.text.length ? b.text : ' ', maxW - indent);
+        if (!lines || !lines.length) lines = [' '];
+        lines.forEach(function (line, idx) {
+          ensureRoom(tpl.lineHeight);
+          if (idx === 0) doc.text('\u2022', m, y);
+          doc.text(String(line), m + indent, y);
+          y += tpl.lineHeight;
+          wrote++;
+        });
+        return;
+      }
+
+      put(b.text, tpl.bodySize, 'normal', 'left', tpl.lineHeight);
+    });
+
+    return wrote;
+  }
+
+function scoreFromText(raw) {
+    var m = String(raw == null ? '' : raw).match(/(\d{1,3})\s*%/);
+    return m ? Math.max(0, Math.min(100, parseInt(m[1], 10))) : null;
+  }
+
+function extractPdfText(buf) {
+    return window.pdfjsLib.getDocument({ data: buf }).promise.then(function (pdf) {
+      var jobs = [];
+      for (var i = 1; i <= pdf.numPages; i++) {
+        jobs.push(pdf.getPage(i).then(function (page) {
+          return page.getTextContent().then(function (c) {
+            return c.items.map(function (it) { return it.str; }).join(' ');
+          });
+        }));
+      }
+      return Promise.all(jobs).then(function (pages) { return pages.join('\n\n'); });
+    });
+  }
+
+function extractDocxText(buf) {
+    return window.mammoth.extractRawText({ arrayBuffer: buf }).then(function (r) { return r.value; });
+  }
+
+function fmtTokens(n) {
+    if (n >= 1000) return Math.round(n / 100) / 10 + 'k';
+    return String(n);
+  }
+
+function parseSections(text, sectionKeys) {
+    var parts = {}, map = {};
+    sectionKeys.forEach(function (k) { parts[k] = ''; map[k.toLowerCase()] = k; });
+    var escaped = sectionKeys.map(function (k) { return k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
+    // Anchored to line start (case-insensitive) so a header phrase appearing
+    // mid-sentence in body copy never splits a section.
+    var pattern = new RegExp('^\\s*(' + escaped.join('|') + ')\\s*[:\\-\u2013]?\\s*', 'gim');
+    var chunks = text.split(pattern).filter(Boolean);
+    var current = null;
+    for (var i = 0; i < chunks.length; i++) {
+      var c = chunks[i], key = map[c.trim().toLowerCase()];
+      if (key) current = key;
+      else if (current) parts[current] += c;
+    }
+    sectionKeys.forEach(function (k) { parts[k] = parts[k].trim(); });
+    return parts;
+  }
+  // ---------- Language ----------
+
+  var STRINGS = {
+    en: {
+      title: 'CV screen',
+      modeOne: 'One candidate', modeMany: 'Screen a batch',
+      sub: 'Reformat a candidate CV into your template, and see what the client will question.',
+      tpllabel: 'Your CV template',
+      tplprompt: 'Drop a Word or PDF copy of your house CV template here',
+      tplnote: 'Read once and kept in your browser. Its section order and headings are matched; fonts and logos are not reproduced, so paste the result into your own file for final branding.',
+      tplFound: 'Sections found:',
+      tplNoSections: 'No clear section headings found \u2014 conventional headings will be used.',
+      candlabel: 'Candidate CV',
+      brieflabel: 'The role or client brief',
+      candph: 'Paste the candidate\u2019s CV, or drop a PDF or Word file here',
+      candphTouch: 'Paste the candidate\u2019s CV, or attach a PDF or Word file',
+      briefph: 'Paste the role description or what the client asked for',
+      dzhint: 'PDF or .docx',
+      pickfile: 'Choose a file', pickfileTouch: 'Attach a file',
+      go: 'Prepare submission',
+      privacy: 'Files are read on your device. Nothing is stored on a server.',
+      saved: '\u2014 saved',
+      working: 'Working\u2026',
+      waitNote: 'This usually takes under a minute.',
+      waitLong: 'Taking longer than usual. Still going.',
+      zoneSubmission: 'The submission', zoneCheck: 'Before you send it',
+      zoneAsk: 'Ask about this CV', zoneResult: 'Result',
+      secConfidence: 'What I\u2019m unsure about here',
+      secFormatted: 'Formatted CV', secNote: 'Note to the client',
+      secFit: 'Fit against the brief', secRisks: 'What the client will ask',
+      secGlossary: 'What these terms mean', secFull: 'Full response',
+      copy: 'Copy', copied: 'Copied', copyFail: 'Copy failed', downloadPdf: 'Download PDF',
+      tplClassic: 'Classic', tplModern: 'Modern', tplCompact: 'Compact',
+      tplClassicNote: 'Serif, centred name \u2014 traditional and conservative.',
+      tplModernNote: 'Sans-serif, left-aligned, ruled section headings.',
+      tplCompactNote: 'Tighter spacing to fit more on one page.',
+      editableHint: 'Editable \u2014 click to change the text', edited: 'edited',
+      askLead: 'Answers come only from the CV. If it does not say, you will be told that \u2014 which tells you what to ask the candidate.',
+      askPlaceholder: 'Has this person worked with regulated safety systems?',
+      askSend: 'Ask', askThinking: 'Reading the CV\u2026',
+      askFail: 'That did not go through. Try again.',
+      askExamples: ['Formal training or self-taught?', 'How senior are they really?', 'Any gaps in the dates?'],
+      batchlabel: 'Candidate CVs',
+      batchprompt: 'Drop a folder of PDF or Word CVs here, or choose several files',
+      batchbrieflabel: 'The role or client brief',
+      shortlistlabel: 'Shortlist size',
+      oversightTitle: 'This ranks CVs. It does not decide anything.',
+      oversightBody: 'Every CV stays on the list with a score and a reason, so you can see what was judged and why. Scores reflect only evidence against the brief, and a low score usually means something was not mentioned rather than that someone cannot do it. Read the ones near your cut-off yourself. In the EU, using AI to screen or rank job applicants is regulated as high-risk, and a person must remain responsible for the decision.',
+      goBatch: 'Screen these CVs',
+      batchLoaded: function (n) { return n === 1 ? '1 CV ready' : n + ' CVs ready'; },
+      batchReading: function (d, t) { return 'Reading ' + d + ' of ' + t + '\u2026'; },
+      batchMore: function (n) { return '+ ' + n + ' more'; },
+      batchUnreadable: function (n) { return n + ' could not be read'; },
+      batchSkipped: function (n) { return n + ' skipped (not PDF or .docx)'; },
+      batchNoneReadable: 'None of those files are PDF or .docx.',
+      batchScreening: 'Screening', batchTailoring: 'Tailoring',
+      batchCost: function (n, s, k, t) {
+        return 'Screening ' + n + ' CVs: roughly ' + s + ' tokens. Tailoring ' + k + ' after that: roughly ' + t + ' more. Rough estimates, counted against your own Claude usage.';
+      },
+      errNoBatch: 'Add some CVs first.',
+      errNoBatchBrief: 'Add the role or client brief.',
+      zoneRanked: 'Ranked against the brief', zoneTailored: 'Tailored submissions',
+      rankedLead: function (n, k) {
+        return 'All ' + n + ' scored. The top ' + k + ' are ticked \u2014 change the selection if you disagree, then tailor.';
+      },
+      tailorSelected: function (n) { return n === 1 ? 'Tailor 1 CV' : 'Tailor these ' + n + ' CVs'; },
+      stepOneDone: 'Step 1 of 2 \u2014 screening done. Nothing has been tailored yet.',
+      stepTwo: 'Step 2 \u2014 optional. Only the ticked CVs are tailored, and only when you press this.',
+      tailorNote: function (n, t) {
+        return 'About a minute each, roughly ' + t + ' tokens for ' + n + '. Nothing is spent until you press it.';
+      },
+      tailorNone: 'Tick at least one candidate to tailor.',
+      deckExport: 'Export as PowerPoint',
+      deckExportNote: 'A deck of the ranking, the requirements table and a plain-English glossary. Writing the glossary costs roughly 2k tokens; the rest is free.',
+      deckWorking: 'Building the deck\u2026',
+      deckFilename: 'candidate-screening.pptx',
+      deckTitle: 'Candidate screening',
+      deckSubtitle: function (n, k) { return n + ' CVs reviewed against the brief \u00b7 top ' + k + ' highlighted'; },
+      deckCaution: 'Scores reflect evidence found in each CV against the stated requirements. They are not an assessment of the people. A low score usually means something was not mentioned, not that a candidate cannot do the work. Read the CVs near your cut-off yourself before deciding anything.',
+      deckRanking: 'Ranked against the brief',
+      deckRankingSub: 'Highlighted rows are the current shortlist. Everyone screened is listed.',
+      deckCandidate: 'Candidate', deckScore: 'Score',
+      deckEvidences: 'What the CV evidences', deckGap: 'Most significant gap',
+      deckMatrix: 'Requirements',
+      deckMatrixSub: 'Evidenced \u00b7 close enough \u00b7 not evidenced. Close enough is a judgement about transferable experience \u2014 the reasoning follows.',
+      deckAdjacent: 'Where a close match was counted',
+      deckAdjacentSub: 'Each amber cell above, with the reason it was counted. Disagree with any of these and the ranking changes.',
+      deckGlossary: 'What these terms mean',
+      deckGlossarySub: 'Written for a reader without a technical background.',
+      deckTerm: 'Term', deckMeans: 'What it is', deckWhy: 'Why it matters here',
+      deckMethod: 'How this was produced, and what it is not',
+      deckMethodPoints: [
+        'Each CV was read and scored against the requirements stated in the brief. Nothing was filtered out \u2014 every candidate screened appears in this deck with a score and a reason.',
+        'Scoring used only evidence in the CV against the brief. It did not consider how well the CV was written, which employers were named, where anyone studied, or how long they have worked.',
+        'A missing requirement means the CV did not mention it. It does not mean the candidate lacks the skill \u2014 people leave things off CVs constantly.',
+        'The amber judgements about transferable experience are the least certain part of this deck. Check them against the reasoning slide.',
+        'This is a shortlisting aid. In the EU, AI used to screen or rank job applicants is regulated as high-risk, and a person must remain responsible for any decision made.'
+      ],
+      errDeck: 'Could not build the deck. Try again.',
+      errDeckLib: 'The PowerPoint library did not load. Reload the page and try again.',
+      zoneMatrix: 'Requirements against the brief',
+      matrixLead: 'Columns are the hard requirements found in the brief. Amber is a judgement about transferable experience, not a fact \u2014 the reasoning is listed underneath.',
+      matrixCandidate: 'Candidate',
+      matrixWhyAdjacent: 'Where a close match was counted:',
+      legMet: 'evidenced', legAdjacent: 'close enough', legMissing: 'not evidenced',
+      errNoCand: 'Add the candidate\u2019s CV.',
+      errNoBrief: 'Add the role or client brief.',
+      errRequest: 'That request didn\u2019t go through. Check your connection and try again.',
+      errPdfLib: 'The PDF library didn\u2019t load. Reload the page and try again.',
+      errPdfEmpty: 'There\u2019s nothing to export yet.',
+      errPdfLayout: 'Couldn\u2019t lay out that text for PDF. Use Copy instead.',
+      errPdfFail: 'The PDF didn\u2019t generate. Use Copy and paste it into a document instead.',
+      fileWrongType: 'That file type won\u2019t work. Use a PDF or .docx.',
+      fileReading: function (n) { return 'Reading ' + n; },
+      fileNoText: 'No text found \u2014 this may be a scanned file. Paste it instead.',
+      fileFail: 'Couldn\u2019t read that file. Paste it instead.',
+      fileLoaded: function (n) { return 'Loaded ' + n; },
+      costLine: function (t) { return 'Roughly ' + t + ' tokens \u2014 a rough estimate, counted against your own Claude usage.'; }
+    },
+    sv: {
+      title: 'CV-granskning',
+      modeOne: 'En kandidat', modeMany: 'Granska flera',
+      sub: 'Formatera om ett kandidat-CV till er mall, och se vad kunden kommer att fråga om.',
+      tpllabel: 'Er CV-mall',
+      tplprompt: 'Släpp en Word- eller PDF-kopia av er CV-mall här',
+      tplnote: 'Läses en gång och sparas i din webbläsare. Ordningen på avsnitten och rubrikerna följs; typsnitt och logotyper återskapas inte, så klistra in resultatet i er egen fil för slutlig formgivning.',
+      tplFound: 'Avsnitt som hittades:',
+      tplNoSections: 'Inga tydliga rubriker hittades \u2014 vanliga rubriker används.',
+      candlabel: 'Kandidatens CV',
+      brieflabel: 'Tjänsten eller kunduppdraget',
+      candph: 'Klistra in kandidatens CV, eller släpp en PDF- eller Word-fil här',
+      candphTouch: 'Klistra in kandidatens CV, eller bifoga en PDF- eller Word-fil',
+      briefph: 'Klistra in rollbeskrivningen eller vad kunden efterfrågat',
+      dzhint: 'PDF eller .docx',
+      pickfile: 'Välj en fil', pickfileTouch: 'Bifoga en fil',
+      go: 'Förbered underlag',
+      privacy: 'Filer läses på din enhet. Ingenting sparas på en server.',
+      saved: '\u2014 sparat',
+      working: 'Arbetar\u2026',
+      waitNote: 'Det brukar ta under en minut.',
+      waitLong: 'Det tar längre tid än vanligt. Det pågår fortfarande.',
+      zoneSubmission: 'Underlaget', zoneCheck: 'Innan du skickar',
+      zoneAsk: 'Fråga om det här CV:t', zoneResult: 'Resultat',
+      secConfidence: 'Det här är jag osäker på',
+      secFormatted: 'Formaterat CV', secNote: 'Meddelande till kunden',
+      secFit: 'Matchning mot uppdraget', secRisks: 'Vad kunden kommer fråga om',
+      secGlossary: 'Vad termerna betyder', secFull: 'Fullständigt svar',
+      copy: 'Kopiera', copied: 'Kopierat', copyFail: 'Kopiering misslyckades', downloadPdf: 'Ladda ner PDF',
+      tplClassic: 'Klassisk', tplModern: 'Modern', tplCompact: 'Kompakt',
+      tplClassicNote: 'Serif, centrerat namn \u2014 traditionellt och återhållsamt.',
+      tplModernNote: 'Sans-serif, vänsterställt, linjerade rubriker.',
+      tplCompactNote: 'Tätare radavstånd för att få plats med mer på en sida.',
+      editableHint: 'Redigerbar \u2014 klicka för att ändra texten', edited: 'ändrad',
+      askLead: 'Svaren hämtas bara från CV:t. Står det inte där får du veta det \u2014 vilket säger dig vad du bör fråga kandidaten om.',
+      askPlaceholder: 'Har personen arbetat med säkerhetskritiska system?',
+      askSend: 'Fråga', askThinking: 'Läser CV:t\u2026',
+      askFail: 'Det gick inte igenom. Försök igen.',
+      askExamples: ['Formell utbildning eller självlärd?', 'Hur senior är personen egentligen?', 'Några luckor i datumen?'],
+      batchlabel: 'Kandidat-CV:n',
+      batchprompt: 'Släpp en mapp med PDF- eller Word-CV:n här, eller välj flera filer',
+      batchbrieflabel: 'Tjänsten eller kunduppdraget',
+      shortlistlabel: 'Antal i urvalet',
+      oversightTitle: 'Det här rangordnar CV:n. Det beslutar ingenting.',
+      oversightBody: 'Alla CV:n står kvar i listan med poäng och motivering, så du ser vad som bedömts och varför. Poängen speglar bara belägg mot uppdraget, och en låg poäng betyder oftast att något inte nämnts \u2014 inte att personen saknar förmågan. Läs själv dem som ligger nära din gräns. Inom EU regleras AI som sorterar eller rangordnar jobbsökande som högrisk, och en människa måste förbli ansvarig för beslutet.',
+      goBatch: 'Granska dessa CV:n',
+      batchLoaded: function (n) { return n === 1 ? '1 CV inläst' : n + ' CV:n inlästa'; },
+      batchReading: function (d, t) { return 'Läser ' + d + ' av ' + t + '\u2026'; },
+      batchMore: function (n) { return '+ ' + n + ' till'; },
+      batchUnreadable: function (n) { return n + ' kunde inte läsas'; },
+      batchSkipped: function (n) { return n + ' hoppades över (ej PDF eller .docx)'; },
+      batchNoneReadable: 'Ingen av filerna är PDF eller .docx.',
+      batchScreening: 'Granskar', batchTailoring: 'Anpassar',
+      batchCost: function (n, s, k, t) {
+        return 'Granska ' + n + ' CV:n: ungefär ' + s + ' tokens. Anpassa ' + k + ' därefter: ungefär ' + t + ' till. Grova uppskattningar, dras från din egen Claude-användning.';
+      },
+      errNoBatch: 'Lägg till några CV:n först.',
+      errNoBatchBrief: 'Lägg till tjänsten eller uppdraget.',
+      zoneRanked: 'Rangordnade mot uppdraget', zoneTailored: 'Anpassade underlag',
+      rankedLead: function (n, k) {
+        return 'Alla ' + n + ' har poängsatts. De ' + k + ' främsta är ikryssade \u2014 ändra urvalet om du inte håller med, och anpassa sedan.';
+      },
+      tailorSelected: function (n) { return n === 1 ? 'Anpassa 1 CV' : 'Anpassa dessa ' + n + ' CV:n'; },
+      stepOneDone: 'Steg 1 av 2 \u2014 granskningen klar. Inget har anpassats än.',
+      stepTwo: 'Steg 2 \u2014 frivilligt. Bara ikryssade CV:n anpassas, och först när du trycker här.',
+      tailorNote: function (n, t) {
+        return 'Ungefär en minut styck, cirka ' + t + ' tokens för ' + n + '. Ingenting dras förrän du trycker.';
+      },
+      tailorNone: 'Kryssa i minst en kandidat för att anpassa.',
+      deckExport: 'Exportera som PowerPoint',
+      deckExportNote: 'En presentation med rangordningen, kravtabellen och en ordlista på vanlig svenska. Ordlistan kostar ungefär 2k tokens; resten är gratis.',
+      deckWorking: 'Bygger presentationen\u2026',
+      deckFilename: 'kandidatgranskning.pptx',
+      deckTitle: 'Kandidatgranskning',
+      deckSubtitle: function (n, k) { return n + ' CV:n granskade mot uppdraget \u00b7 de ' + k + ' främsta markerade'; },
+      deckCaution: 'Poängen speglar belägg i varje CV mot de angivna kraven. Den är ingen bedömning av personerna. En låg poäng betyder oftast att något inte nämnts, inte att kandidaten saknar förmågan. Läs själv de CV:n som ligger nära din gräns innan du beslutar något.',
+      deckRanking: 'Rangordnade mot uppdraget',
+      deckRankingSub: 'Markerade rader är det nuvarande urvalet. Alla granskade finns med.',
+      deckCandidate: 'Kandidat', deckScore: 'Poäng',
+      deckEvidences: 'Vad CV:t styrker', deckGap: 'Största luckan',
+      deckMatrix: 'Krav',
+      deckMatrixSub: 'Styrkt \u00b7 tillräckligt nära \u00b7 inte styrkt. Tillräckligt nära är en bedömning av överförbar erfarenhet \u2014 motiveringen följer.',
+      deckAdjacent: 'Där en närliggande erfarenhet räknats',
+      deckAdjacentSub: 'Varje gul ruta ovan, med skälet den räknats. Håller du inte med ändras rangordningen.',
+      deckGlossary: 'Vad termerna betyder',
+      deckGlossarySub: 'Skrivet för en läsare utan teknisk bakgrund.',
+      deckTerm: 'Term', deckMeans: 'Vad det är', deckWhy: 'Varför det spelar roll här',
+      deckMethod: 'Hur detta togs fram, och vad det inte är',
+      deckMethodPoints: [
+        'Varje CV lästes och poängsattes mot kraven i uppdraget. Ingenting sorterades bort \u2014 alla granskade kandidater finns i denna presentation med poäng och motivering.',
+        'Poängsättningen använde bara belägg i CV:t mot uppdraget. Den tog inte hänsyn till hur välskrivet CV:t var, vilka arbetsgivare som nämndes, var någon studerat eller hur länge de arbetat.',
+        'Ett saknat krav betyder att CV:t inte nämnde det. Det betyder inte att kandidaten saknar förmågan \u2014 folk utelämnar saker i CV:n hela tiden.',
+        'De gula bedömningarna om överförbar erfarenhet är den minst säkra delen. Kontrollera dem mot motiveringssidan.',
+        'Detta är ett hjälpmedel för urval. Inom EU regleras AI som sorterar eller rangordnar jobbsökande som högrisk, och en människa måste förbli ansvarig för varje beslut.'
+      ],
+      errDeck: 'Kunde inte bygga presentationen. Försök igen.',
+      errDeckLib: 'PowerPoint-biblioteket laddades inte. Ladda om sidan och försök igen.',
+      zoneMatrix: 'Krav mot uppdraget',
+      matrixLead: 'Kolumnerna är de konkreta kraven i uppdraget. Gult är en bedömning av överförbar erfarenhet, inte ett faktum \u2014 motiveringen står nedanför.',
+      matrixCandidate: 'Kandidat',
+      matrixWhyAdjacent: 'Där en närliggande erfarenhet räknats:',
+      legMet: 'styrkt', legAdjacent: 'tillräckligt nära', legMissing: 'inte styrkt',
+      errNoCand: 'Lägg till kandidatens CV.',
+      errNoBrief: 'Lägg till tjänsten eller uppdraget.',
+      errRequest: 'Förfrågan gick inte igenom. Kontrollera din uppkoppling och försök igen.',
+      errPdfLib: 'PDF-biblioteket laddades inte. Ladda om sidan och försök igen.',
+      errPdfEmpty: 'Det finns inget att exportera än.',
+      errPdfLayout: 'Kunde inte formge texten som PDF. Använd Kopiera i stället.',
+      errPdfFail: 'PDF:en skapades inte. Använd Kopiera och klistra in i ett dokument i stället.',
+      fileWrongType: 'Den filtypen fungerar inte. Använd PDF eller .docx.',
+      fileReading: function (n) { return 'Läser ' + n; },
+      fileNoText: 'Ingen text hittades \u2014 filen kan vara inskannad. Klistra in texten i stället.',
+      fileFail: 'Kunde inte läsa filen. Klistra in texten i stället.',
+      fileLoaded: function (n) { return 'Laddade ' + n; },
+      costLine: function (t) { return 'Ungefär ' + t + ' tokens \u2014 en grov uppskattning, dras från din egen Claude-användning.'; }
+    }
+  };
+
+  var lang = 'en';
+  function T() { return STRINGS[lang]; }
+  var LANG_NAME = { en: 'English', sv: 'Swedish' };
+  var isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+  // ---------- Elements ----------
+  var tplZone = $('tpl-dropzone'), tplPick = $('tpl-pick'), tplFile = $('tpl-file');
+  var candEl = $('cand'), candZone = $('cand-dropzone'), candPick = $('cand-pick');
+  var candFile = $('cand-file'), candHint = $('cand-hint');
+  var briefEl = $('brief'), goBtn = $('go'), errorEl = $('error');
+  var costEl = $('cost'), stepsEl = $('steps'), outputEl = $('output');
+  var langEn = $('lang-en'), langSv = $('lang-sv');
+
+  var templateText = '', templateName = '';
+  var lastCandidateCv = '', lastBrief = '';
+
+  function showError(m) { errorEl.textContent = m; errorEl.style.display = 'block'; }
+  function clearError() { errorEl.style.display = 'none'; }
+
+  // ---------- File reading ----------
+  function readAnyFile(file, onText, onError) {
+    var n = (file.name || '').toLowerCase();
+    var isPdf = n.endsWith('.pdf') || file.type === 'application/pdf';
+    var isDocx = n.endsWith('.docx') ||
+      file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    if (!isPdf && !isDocx) { onError(T().fileWrongType); return; }
+    var reader = new FileReader();
+    reader.onload = function () {
+      (isPdf ? extractPdfText(reader.result) : extractDocxText(reader.result))
+        .then(function (text) {
+          text = (text || '').trim();
+          if (!text) { onError(T().fileNoText); return; }
+          onText(text);
+        }).catch(function () { onError(T().fileFail); });
+    };
+    reader.onerror = function () { onError(T().fileFail); };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function dragWire(zone, onFile) {
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      zone.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); zone.classList.add('dragging'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      zone.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); zone.classList.remove('dragging'); });
+    });
+    if (onFile) {
+      zone.addEventListener('drop', function (e) {
+        var f = e.dataTransfer && e.dataTransfer.files;
+        if (f && f[0]) onFile(f[0]);
+      });
+    }
+  }
+
+  // ---------- Template ----------
+  function showTemplate() {
+    var empty = $('tpl-empty'), loaded = $('tpl-loaded');
+    if (!templateText) { empty.style.display = 'block'; loaded.style.display = 'none'; return; }
+    empty.style.display = 'none';
+    loaded.style.display = 'block';
+    $('tpl-filename').textContent = templateName || 'template';
+    var secs = templateSections(templateText);
+    $('tpl-sections').textContent = secs.length
+      ? T().tplFound + ' ' + secs.slice(0, 8).join(' \u00b7 ')
+      : T().tplNoSections;
+  }
+
+  function loadTemplate(file) {
+    readAnyFile(file, function (text) {
+      templateText = text; templateName = file.name;
+      showTemplate(); updateCost();
+      if (window.storage) {
+        window.storage.set('cs-template', JSON.stringify({ text: text, name: file.name }), false)
+          .then(function () { $('tpl-saved').textContent = T().saved; }).catch(function () {});
+      }
+    }, function (msg) {
+      var el = $('t-tplprompt');
+      el.textContent = msg; el.style.color = 'var(--red)';
+      setTimeout(function () { el.textContent = T().tplprompt; el.style.color = ''; }, 4000);
+    });
+  }
+
+  function loadCandidate(file) {
+    readAnyFile(file, function (text) {
+      candEl.value = text;
+      candHint.textContent = T().fileLoaded(file.name);
+      setTimeout(function () { candHint.textContent = T().dzhint; }, 4000);
+      updateCost();
+    }, function (msg) {
+      candHint.textContent = msg; candHint.style.color = 'var(--red)';
+      setTimeout(function () { candHint.textContent = T().dzhint; candHint.style.color = ''; }, 4000);
+    });
+  }
+
+  // ---------- PDF ----------
+  function downloadPdf(text, filename, templateKey) {
+    var lib = window.jspdf && (window.jspdf.jsPDF || window.jspdf.default);
+    if (!lib) { showError(T().errPdfLib); return; }
+    var content = (text == null ? '' : String(text)).trim();
+    if (!content) { showError(T().errPdfEmpty); return; }
+    try {
+      var doc = new lib({ unit: 'pt', format: 'letter' });
+      var pw = doc.internal.pageSize.getWidth(), ph = doc.internal.pageSize.getHeight();
+      var wrote = 0, tpl = TEMPLATES[templateKey];
+      if (tpl) {
+        wrote = renderCvPdf(doc, parseCvStructure(content), tpl, pw, ph);
+      } else {
+        var margin = 56, maxW = pw - margin * 2, lh = 14, y = margin;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+        content.split(/\r?\n/).forEach(function (para) {
+          var lines = doc.splitTextToSize(para.length ? para : ' ', maxW);
+          if (!lines || !lines.length) lines = [' '];
+          lines.forEach(function (line) {
+            if (y > ph - margin) { doc.addPage(); y = margin; }
+            doc.text(String(line), margin, y); y += lh; wrote++;
+          });
+        });
+      }
+      if (!wrote) { showError(T().errPdfLayout); return; }
+      var blob = doc.output('blob');
+      if (!blob || !blob.size) { showError(T().errPdfLayout); return; }
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = filename; a.rel = 'noopener'; a.style.display = 'none';
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 4000);
+    } catch (err) {
+      console.error('PDF export failed:', err);
+      showError(T().errPdfFail);
+    }
+  }
+
+  // ---------- Rendering ----------
+  function makeZone(label) {
+    var w = document.createElement('div');
+    w.className = 'zone';
+    var h = document.createElement('p');
+    h.className = 'zone-head';
+    h.textContent = label;
+    w.appendChild(h);
+    return w;
+  }
+
+  function makeSection(title, body, opts) {
+    opts = opts || {};
+    var d = document.createElement('details');
+    d.className = 'sec' + (opts.confidence ? ' conf-sec' : '');
+    if (opts.open) d.open = true;
+
+    var s = document.createElement('summary');
+    s.textContent = title;
+    d.appendChild(s);
+
+    var b = document.createElement('div');
+    b.className = 'sec-body';
+    b.textContent = body;
+    d.appendChild(b);
+
+    var getText = function () { return body; };
+    if (opts.editable) {
+      b.setAttribute('contenteditable', 'plaintext-only');
+      b.setAttribute('spellcheck', 'true');
+      b.classList.add('editable');
+      b.setAttribute('aria-label', T().editableHint);
+      getText = function () { return b.innerText.replace(/\u00a0/g, ' '); };
+      var edited = false;
+      b.addEventListener('input', function () {
+        if (!edited) {
+          edited = true;
+          var flag = document.createElement('span');
+          flag.className = 'edited-flag';
+          flag.textContent = T().edited;
+          s.appendChild(flag);
+        }
+      });
+    }
+
+    var actions = document.createElement('div');
+    actions.className = 'sec-actions';
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'ghost';
+    copyBtn.textContent = T().copy;
+    copyBtn.addEventListener('click', function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(getText()).then(function () {
+          copyBtn.textContent = T().copied;
+          setTimeout(function () { copyBtn.textContent = T().copy; }, 1600);
+        }).catch(function () { copyBtn.textContent = T().copyFail; });
+      } else { copyBtn.textContent = T().copyFail; }
+    });
+    actions.appendChild(copyBtn);
+
+    if (opts.pdf && !opts.templates) {
+      var pdfBtn = document.createElement('button');
+      pdfBtn.className = 'ghost';
+      pdfBtn.textContent = T().downloadPdf;
+      pdfBtn.addEventListener('click', function () { downloadPdf(getText(), opts.pdf); });
+      actions.appendChild(pdfBtn);
+    }
+    d.appendChild(actions);
+
+    if (opts.pdf && opts.templates) {
+      var picker = document.createElement('div');
+      picker.className = 'tpl-picker';
+      var chosen = 'modern';
+      var noteEl = document.createElement('p');
+      noteEl.className = 'tpl-note';
+      var row = document.createElement('div');
+      row.className = 'tpl-row';
+      Object.keys(TEMPLATES).forEach(function (key) {
+        var t = TEMPLATES[key];
+        var bb = document.createElement('button');
+        bb.className = 'tpl' + (key === chosen ? ' on' : '');
+        bb.type = 'button';
+        bb.textContent = T()[t.labelKey];
+        bb.setAttribute('aria-pressed', key === chosen ? 'true' : 'false');
+        bb.addEventListener('click', function () {
+          chosen = key;
+          row.querySelectorAll('.tpl').forEach(function (o) {
+            o.classList.remove('on'); o.setAttribute('aria-pressed', 'false');
+          });
+          bb.classList.add('on'); bb.setAttribute('aria-pressed', 'true');
+          noteEl.textContent = T()[t.noteKey];
+        });
+        row.appendChild(bb);
+      });
+      noteEl.textContent = T()[TEMPLATES[chosen].noteKey];
+      var dl = document.createElement('button');
+      dl.className = 'ghost';
+      dl.textContent = T().downloadPdf;
+      dl.addEventListener('click', function () { downloadPdf(getText(), opts.pdf, chosen); });
+      picker.appendChild(row); picker.appendChild(noteEl); picker.appendChild(dl);
+      d.appendChild(picker);
+    }
+    return d;
+  }
+
+  function makeScoreBlock(raw) {
+    var pct = scoreFromText(raw);
+    var wrap = document.createElement('div');
+    wrap.className = 'score-block';
+    if (pct !== null) {
+      var tone = pct >= 75 ? 'var(--accent)' : pct >= 50 ? 'var(--amber)' : 'var(--red)';
+      var row = document.createElement('div');
+      row.className = 'score-row';
+      var num = document.createElement('div');
+      num.className = 'score-num'; num.style.color = tone; num.textContent = pct + '%';
+      row.appendChild(num);
+      wrap.appendChild(row);
+      var meter = document.createElement('div');
+      meter.className = 'meter'; meter.style.color = tone;
+      var lit = Math.round(pct / 5);
+      for (var i = 0; i < 20; i++) {
+        var seg = document.createElement('i');
+        if (i < lit) seg.className = 'on';
+        meter.appendChild(seg);
+      }
+      wrap.appendChild(meter);
+    }
+    var detail = document.createElement('div');
+    detail.className = 'score-detail';
+    detail.textContent = raw.replace(/^\s*\d{1,3}\s*%\s*/, '').trim();
+    wrap.appendChild(detail);
+    return wrap;
+  }
+
+  // ---------- API ----------
+  function callClaude(prompt, maxTokens) {
+    return fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: maxTokens || 4000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      if (!data || !data.content) throw new Error('no content');
+      var t = data.content.map(function (b) { return b.type === 'text' ? b.text : ''; }).join('\n').trim();
+      if (!t) throw new Error('empty');
+      return t;
+    });
+  }
+
+  // ---------- Prompt ----------
+  var KEYS = ['FORMATTED CV', 'SUBMISSION NOTE', 'FIT', 'GLOSSARY', 'RISKS', 'CONFIDENCE'];
+
+  function buildPrompt(cand, brief) {
+    var hasTpl = !!templateText.trim();
+    return '<house_template>\n' + (hasTpl ? templateText : '(none supplied)') + '\n</house_template>\n\n' +
+      '<candidate_cv>\n' + cand + '\n</candidate_cv>\n\n' +
+      '<role_brief>\n' + brief + '\n</role_brief>\n\n' +
+      'You are preparing a candidate submission for a client. The candidate is represented by an agency or consultancy.\n' +
+      (hasTpl
+        ? 'Follow the house template exactly: use its section order, its heading wording and its conventions for how entries are laid out. Where the template shows placeholder or example content, replace it with this candidate\u2019s real details \u2014 never carry template example text through into the output. If the template has a section this candidate has nothing for, omit that section rather than inventing content.\n'
+        : 'No house template was supplied, so use conventional CV section headings.\n') +
+      'The role being submitted for is defined ONLY by <role_brief>. Job titles inside <candidate_cv> are the candidate\u2019s history, not the target role.\n' +
+      'Everything must be grounded in the candidate CV. Do not invent experience, do not inflate seniority, and do not restate a responsibility as an achievement.\n\n' +
+      'Produce these sections with these exact English headers:\n' +
+      'FORMATTED CV: The candidate\u2019s CV rewritten into the house template structure and tailored to the brief. Plain text, no markdown.\n' +
+      'SUBMISSION NOTE: A short paragraph the consultant can send to the client with this CV, saying why this candidate fits the brief. Under 120 words. No placeholder brackets.\n' +
+      'FIT: A percentage on the first line, then which of the brief\u2019s requirements this candidate clearly meets.\n' +
+      'GLOSSARY: Every tool, product, framework, standard, certification, acronym and abbreviation that appears in the candidate CV, each explained in one short line for someone who does not work in this field. Format each as "Term \u2014 what it is". Only include terms that actually appear in the CV. Cover obscure and industry-specific ones; skip terms any reader would know. If a term is ambiguous or you are not certain what it refers to in this context, say so rather than guessing. If the CV contains nothing that needs explaining, write "nothing that needs explaining".\n' +
+      'RISKS: What a client is likely to question \u2014 requirements the CV does not evidence, unexplained gaps, or a seniority mismatch. Be direct; a consultant needs to know this before the client asks. Say so plainly if there is nothing significant.\n' +
+      'CONFIDENCE: Where this output is weak \u2014 detail the CV did not contain, anything inferred from the template rather than stated, a claim resting on a single line. Do not manufacture doubt; if it was all solid, say so in one line.\n\n' +
+      'Keep the header lines in English exactly as written. Write the content in ' + LANG_NAME[lang] + '. Plain text, no markdown symbols.';
+  }
+
+  // ---------- Ask panel ----------
+  function buildAskPanel() {
+    var zone = makeZone(T().zoneAsk);
+    var lead = document.createElement('p');
+    lead.className = 'ask-lead';
+    lead.textContent = T().askLead;
+    zone.appendChild(lead);
+
+    var thread = document.createElement('div');
+    zone.appendChild(thread);
+
+    var row = document.createElement('div');
+    row.className = 'ask-row';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'ask-input';
+    input.placeholder = T().askPlaceholder;
+    row.appendChild(input);
+    var send = document.createElement('button');
+    send.type = 'button';
+    send.className = 'ghost ask-send';
+    send.textContent = T().askSend;
+    row.appendChild(send);
+    zone.appendChild(row);
+
+    var sugg = document.createElement('div');
+    sugg.className = 'ask-suggestions';
+    T().askExamples.forEach(function (q) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'ask-chip'; b.textContent = q;
+      b.addEventListener('click', function () { input.value = q; ask(); });
+      sugg.appendChild(b);
+    });
+    zone.appendChild(sugg);
+
+    function ask() {
+      var q = input.value.trim();
+      if (!q || !lastCandidateCv) return;
+      input.value = '';
+      send.disabled = true;
+
+      var item = document.createElement('div');
+      item.className = 'ask-item';
+      var qp = document.createElement('p');
+      qp.className = 'ask-q'; qp.textContent = q;
+      item.appendChild(qp);
+      var ap = document.createElement('p');
+      ap.className = 'ask-a'; ap.textContent = T().askThinking;
+      ap.style.color = 'var(--ink-faint)';
+      item.appendChild(ap);
+      thread.appendChild(item);
+
+      var p = 'A consultant is screening a candidate and has a question about their CV.\n\n' +
+        '<candidate_cv>\n' + lastCandidateCv + '\n</candidate_cv>\n\n' +
+        (lastBrief ? '<role_brief>\n' + lastBrief + '\n</role_brief>\n\n' : '') +
+        'Question: ' + q + '\n\n' +
+        'Answer using ONLY what the CV states. Quote or point to the specific line that supports your answer.\n' +
+        'If the CV does not establish it, say so plainly and directly \u2014 "the CV does not say" is a useful and correct answer here, and far more valuable than a guess. Do not infer experience from a job title, a company name, or the era someone worked in. Do not assume a qualification from a degree subject.\n' +
+        'Where the CV is suggestive but not conclusive, say exactly that and name what would settle it \u2014 the consultant can then ask the candidate.\n' +
+        'Answer in under 80 words. Plain text, no markdown. Write in ' + LANG_NAME[lang] + '.';
+
+      callClaude(p, 1200).then(function (text) {
+        send.disabled = false;
+        ap.textContent = text.trim(); ap.style.color = '';
+        input.focus();
+      }).catch(function () {
+        send.disabled = false;
+        ap.textContent = T().askFail; ap.style.color = 'var(--red)';
+      });
+    }
+
+    send.addEventListener('click', ask);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); ask(); }
+    });
+    return zone;
+  }
+
+  // ---------- Render ----------
+  function render(text) {
+    outputEl.innerHTML = '';
+    var parts = parseSections(text, KEYS);
+    if (!KEYS.some(function (k) { return parts[k]; })) {
+      var z = makeZone(T().zoneResult);
+      z.appendChild(makeSection(T().secFull, text, { open: true }));
+      outputEl.appendChild(z);
+      outputEl.appendChild(buildAskPanel());
+      return;
+    }
+
+    var sub = makeZone(T().zoneSubmission);
+    if (parts['CONFIDENCE']) {
+      sub.appendChild(makeSection(T().secConfidence, parts['CONFIDENCE'], { open: true, confidence: true }));
+    }
+    if (parts['FORMATTED CV']) {
+      sub.appendChild(makeSection(T().secFormatted, parts['FORMATTED CV'],
+        { open: true, pdf: 'candidate-cv.pdf', templates: true, editable: true }));
+    }
+    if (parts['SUBMISSION NOTE']) {
+      sub.appendChild(makeSection(T().secNote, parts['SUBMISSION NOTE'], { editable: true }));
+    }
+    outputEl.appendChild(sub);
+
+    var check = makeZone(T().zoneCheck);
+    if (parts['FIT']) {
+      var d = document.createElement('details');
+      d.className = 'sec'; d.open = true;
+      var s = document.createElement('summary');
+      s.textContent = T().secFit;
+      d.appendChild(s);
+      d.appendChild(makeScoreBlock(parts['FIT']));
+      check.appendChild(d);
+    }
+    if (parts['RISKS']) check.appendChild(makeSection(T().secRisks, parts['RISKS'], { open: true }));
+    if (parts['GLOSSARY'] &&
+        parts['GLOSSARY'].toLowerCase().indexOf('nothing that needs explaining') !== 0) {
+      check.appendChild(makeSection(T().secGlossary, parts['GLOSSARY']));
+    }
+    if (check.children.length > 1) outputEl.appendChild(check);
+
+    outputEl.appendChild(buildAskPanel());
+  }
+
+
+
+  // ---------- Requirements matrix ----------
+  // The brief's hard requirements become columns; each candidate a row. Cells
+  // are met / adjacent / not evidenced. Adjacency is a judgement call, so the
+  // model must justify each one and the interface says it is a judgement.
+
+  var requirements = [];   // short labels, in the brief's order
+
+  function extractRequirements(brief) {
+    var p = 'Read this role brief and list its hard requirements \u2014 the specific tools, languages, frameworks, ' +
+      'certifications, standards or qualifications a candidate must have.\n\n' +
+      '<role_brief>\n' + brief + '\n</role_brief>\n\n' +
+      'Output one requirement per line, at most 10 lines, most important first. ' +
+      'Each line is a short label of 1-3 words, exactly as the brief names it \u2014 "Unreal", "ISO 26262", "Python". ' +
+      'List only concrete, checkable requirements. Skip soft requirements like "team player", "good communicator" or ' +
+      '"self-motivated", which cannot be verified from a CV. If the brief states no concrete requirements, output "none".\n' +
+      'No numbering, no commentary, no preamble.';
+
+    return callClaude(p, 400).then(function (text) {
+      if (/^\s*none\s*$/i.test(text)) return [];
+      return text.split(/\n/)
+        .map(function (l) { return l.replace(/^\s*[-\u2022*\d.)]+\s*/, '').trim(); })
+        .filter(function (l) { return l.length > 0 && l.length < 40; })
+        .slice(0, 10);
+    });
+  }
+
+  // Coverage arrives as one letter per requirement: M met, A adjacent, N not.
+  function parseCoverage(code, count) {
+    var letters = String(code || '').toUpperCase().replace(/[^MAN]/g, '').split('');
+    var out = [];
+    for (var i = 0; i < count; i++) out.push(letters[i] || 'N');
+    return out;
+  }
+
+  function coverageLegend() {
+    var wrap = document.createElement('div');
+    wrap.className = 'legend';
+    [['M', T().legMet], ['A', T().legAdjacent], ['N', T().legMissing]].forEach(function (pair) {
+      var item = document.createElement('span');
+      item.className = 'legend-item';
+      var box = document.createElement('span');
+      box.className = 'cell cell-' + pair[0];
+      box.textContent = pair[0];
+      item.appendChild(box);
+      var lbl = document.createElement('span');
+      lbl.textContent = pair[1];
+      item.appendChild(lbl);
+      wrap.appendChild(item);
+    });
+    return wrap;
+  }
+
+  function renderMatrix(rows) {
+    if (!requirements.length) return null;
+
+    var zone = makeZone(T().zoneMatrix);
+
+    var lead = document.createElement('p');
+    lead.className = 'ask-lead';
+    lead.textContent = T().matrixLead;
+    zone.appendChild(lead);
+    zone.appendChild(coverageLegend());
+
+    var scroll = document.createElement('div');
+    scroll.className = 'matrix-scroll';
+
+    var table = document.createElement('table');
+    table.className = 'matrix';
+
+    var thead = document.createElement('thead');
+    var hr = document.createElement('tr');
+    var corner = document.createElement('th');
+    corner.className = 'matrix-corner';
+    corner.textContent = T().matrixCandidate;
+    hr.appendChild(corner);
+    requirements.forEach(function (req) {
+      var th = document.createElement('th');
+      th.className = 'matrix-req';
+      var span = document.createElement('span');
+      span.textContent = req;
+      th.appendChild(span);
+      th.title = req;
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      var nameCell = document.createElement('th');
+      nameCell.className = 'matrix-name';
+      nameCell.textContent = r.name;
+      nameCell.title = r.name;
+      tr.appendChild(nameCell);
+
+      var cov = parseCoverage(r.coverage, requirements.length);
+      cov.forEach(function (state, i) {
+        var td = document.createElement('td');
+        td.className = 'cell cell-' + state;
+        td.textContent = state;
+        // Colour alone must not carry the meaning.
+        td.setAttribute('aria-label', requirements[i] + ': ' +
+          (state === 'M' ? T().legMet : state === 'A' ? T().legAdjacent : T().legMissing));
+        td.title = requirements[i] + ' \u2014 ' +
+          (state === 'M' ? T().legMet : state === 'A' ? T().legAdjacent : T().legMissing);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    scroll.appendChild(table);
+    zone.appendChild(scroll);
+
+    // Adjacency claims need their reasoning visible, not hidden in a colour.
+    var notes = rows.filter(function (r) { return r.adjacent && r.adjacent.toLowerCase() !== 'none'; });
+    if (notes.length) {
+      var nh = document.createElement('p');
+      nh.className = 'matrix-notes-head';
+      nh.textContent = T().matrixWhyAdjacent;
+      zone.appendChild(nh);
+      notes.forEach(function (r) {
+        var p = document.createElement('p');
+        p.className = 'matrix-note';
+        p.textContent = r.name + ' \u2014 ' + r.adjacent;
+        zone.appendChild(p);
+      });
+    }
+
+    return zone;
+  }
+
+
+  // ---------- PowerPoint export ----------
+  // The screening result as a deck a recruiter can circulate. The matrix is
+  // reproduced with the same three states, and a glossary is written for
+  // someone who does not know what ISO 26262 or ASIL means.
+
+  var batchGlossary = '';   // generated on demand, only when exporting
+
+  function buildBatchGlossary(rows) {
+    if (batchGlossary) return Promise.resolve(batchGlossary);
+
+    // Terms come from the requirements plus the skills lines of the CVs, so
+    // the glossary covers what a recruiter will actually be reading.
+    var sample = rows.slice(0, 12).map(function (r) {
+      return r.text.slice(0, 2500);
+    }).join('\n\n---\n\n');
+
+    var p = 'A recruiter with no technical background is reviewing candidates for this role. ' +
+      'Explain the technical terms they will encounter.\n\n' +
+      (requirements.length ? '<requirements>\n' + requirements.join('\n') + '\n</requirements>\n\n' : '') +
+      '<cv_extracts>\n' + sample + '\n</cv_extracts>\n\n' +
+      'List the technical terms, tools, standards, certifications and acronyms that appear above and would not be obvious to a non-technical reader. ' +
+      'Cover every requirement first, then other terms that come up repeatedly across the CVs.\n' +
+      'One term per line, formatted exactly as: Term :: plain-English explanation :: why it matters for this role\n' +
+      'Keep the explanation under 25 words and free of other jargon \u2014 if explaining one term needs another technical word, explain that word too on its own line. ' +
+      'Keep the "why it matters" under 20 words.\n' +
+      'Skip terms a general reader would know. If you are not certain what a term means in this context, say so in the explanation rather than guessing.\n' +
+      'At most 20 lines. No numbering, no headers, no preamble.';
+
+    return callClaude(p, 1600).then(function (text) {
+      batchGlossary = text.trim();
+      return batchGlossary;
+    });
+  }
+
+  function parseGlossary(text) {
+    return String(text || '').split(/\n/).map(function (line) {
+      var parts = line.split('::').map(function (s) { return s.trim(); });
+      if (parts.length < 2 || !parts[0]) return null;
+      return { term: parts[0].replace(/^[-\u2022*\d.)\s]+/, ''), what: parts[1], why: parts[2] || '' };
+    }).filter(Boolean).slice(0, 20);
+  }
+
+  var DECK = {
+    ink: '16212B', inkSoft: '55636F', inkFaint: '8A949E',
+    paper: 'F4F5F3', white: 'FFFFFF', rule: 'E2E5E1',
+    teal: '1A6B66', tealLt: '5CB8B1', amber: '96650D', red: '9C3025',
+    metFill: 'DCEBE9', adjFill: 'F5E9D2', misFill: 'F3DEDB',
+    head: 'Georgia', body: 'Calibri'
+  };
+
+  function deckFurniture(slide, dark) {
+    slide.addText('CONFIDENTIAL \u2014 candidate data', {
+      x: 0.5, y: 0.22, w: 6, h: 0.24, fontSize: 8, bold: true, charSpacing: 1.4,
+      color: dark ? '7C8B93' : '9AA3A9', fontFace: DECK.body
+    });
+    slide.addText(new Date().toLocaleDateString(), {
+      x: 6.9, y: 0.22, w: 6, h: 0.24, fontSize: 8, align: 'right',
+      color: dark ? '7C8B93' : '9AA3A9', fontFace: DECK.body
+    });
+  }
+
+  function exportDeck(rows, brief, btn) {
+    var Lib = window.PptxGenJS;
+    if (!Lib) { showError(T().errDeckLib); return; }
+
+    btn.disabled = true;
+    var origLabel = btn.textContent;
+    btn.textContent = T().deckWorking;
+
+    buildBatchGlossary(rows).then(function (glossaryText) {
+      var gloss = parseGlossary(glossaryText);
+      var pptx = new Lib();
+      pptx.layout = 'LAYOUT_WIDE';
+      var shortlistN = parseInt($('shortlist-size').value, 10);
+
+      // ---- Title ----
+      var s1 = pptx.addSlide();
+      s1.background = { color: DECK.ink };
+      s1.addText(T().deckTitle, {
+        x: 0.9, y: 2.3, w: 10, h: 0.9, fontSize: 40, bold: true,
+        color: DECK.white, fontFace: DECK.head
+      });
+      s1.addText(T().deckSubtitle(rows.length, shortlistN), {
+        x: 0.9, y: 3.25, w: 10, h: 0.5, fontSize: 16,
+        color: 'C7D2D0', fontFace: DECK.body
+      });
+      s1.addText(T().deckCaution, {
+        x: 0.9, y: 5.6, w: 10.5, h: 0.9, fontSize: 11,
+        color: DECK.tealLt, fontFace: DECK.body, lineSpacing: 16
+      });
+      deckFurniture(s1, true);
+
+      // ---- Ranking ----
+      var s2 = pptx.addSlide();
+      s2.background = { color: DECK.paper };
+      s2.addText(T().deckRanking, {
+        x: 0.5, y: 0.6, w: 9, h: 0.5, fontSize: 26, bold: true,
+        color: DECK.ink, fontFace: DECK.head
+      });
+      s2.addText(T().deckRankingSub, {
+        x: 0.5, y: 1.12, w: 11, h: 0.3, fontSize: 11,
+        color: DECK.inkSoft, fontFace: DECK.body
+      });
+
+      var head = [
+        { text: '', options: { fill: { color: DECK.paper } } },
+        { text: T().deckCandidate, options: { bold: true, color: DECK.inkSoft } },
+        { text: T().deckScore, options: { bold: true, color: DECK.inkSoft, align: 'center' } },
+        { text: T().deckEvidences, options: { bold: true, color: DECK.inkSoft } },
+        { text: T().deckGap, options: { bold: true, color: DECK.inkSoft } }
+      ];
+      var body = rows.map(function (r, i) {
+        var short = i < shortlistN;
+        var fill = short ? { color: DECK.metFill } : { color: DECK.white };
+        return [
+          { text: String(i + 1), options: { fill: fill, color: DECK.inkFaint, align: 'center' } },
+          { text: r.name.replace(/\.(docx|pdf)$/i, ''), options: { fill: fill, bold: short, color: DECK.ink } },
+          { text: String(r.score), options: {
+            fill: fill, align: 'center', bold: true,
+            color: r.score >= 75 ? DECK.teal : r.score >= 50 ? DECK.amber : DECK.inkFaint } },
+          { text: r.why, options: { fill: fill, color: DECK.inkSoft } },
+          { text: (r.concern && r.concern.toLowerCase() !== 'none') ? r.concern : '\u2014',
+            options: { fill: fill, color: DECK.inkSoft } }
+        ];
+      });
+      s2.addTable([head].concat(body), {
+        x: 0.5, y: 1.6, w: 12.3, colW: [0.4, 2.6, 0.7, 4.4, 4.2],
+        fontSize: 9.5, fontFace: DECK.body, border: { pt: 0.5, color: DECK.rule },
+        valign: 'middle', rowH: 0.28, autoPage: true, autoPageRepeatHeader: true
+      });
+      deckFurniture(s2, false);
+
+      // ---- Matrix, split so columns stay legible ----
+      if (requirements.length) {
+        var per = 6;
+        for (var start = 0; start < requirements.length; start += per) {
+          var slice = requirements.slice(start, start + per);
+          var sm = pptx.addSlide();
+          sm.background = { color: DECK.paper };
+          var part = requirements.length > per
+            ? ' (' + (Math.floor(start / per) + 1) + '/' + Math.ceil(requirements.length / per) + ')'
+            : '';
+          sm.addText(T().deckMatrix + part, {
+            x: 0.5, y: 0.6, w: 9, h: 0.5, fontSize: 26, bold: true,
+            color: DECK.ink, fontFace: DECK.head
+          });
+          sm.addText(T().deckMatrixSub, {
+            x: 0.5, y: 1.12, w: 11.5, h: 0.3, fontSize: 11,
+            color: DECK.inkSoft, fontFace: DECK.body
+          });
+
+          var mh = [{ text: T().deckCandidate, options: { bold: true, color: DECK.inkSoft } }]
+            .concat(slice.map(function (req) {
+              return { text: req, options: { bold: true, color: DECK.ink, align: 'center' } };
+            }));
+          var mb = rows.map(function (r) {
+            var cov = parseCoverage(r.coverage, requirements.length);
+            return [{ text: r.name.replace(/\.(docx|pdf)$/i, ''), options: { color: DECK.ink } }]
+              .concat(slice.map(function (req, j) {
+                var st = cov[start + j];
+                return { text: T()['leg' + (st === 'M' ? 'Met' : st === 'A' ? 'Adjacent' : 'Missing')],
+                  options: {
+                    align: 'center',
+                    fill: { color: st === 'M' ? DECK.metFill : st === 'A' ? DECK.adjFill : DECK.misFill },
+                    color: st === 'M' ? DECK.teal : st === 'A' ? DECK.amber : DECK.red,
+                    bold: true
+                  } };
+              }));
+          });
+          var colW = [3.0].concat(slice.map(function () { return 9.3 / slice.length; }));
+          sm.addTable([mh].concat(mb), {
+            x: 0.5, y: 1.65, w: 12.3, colW: colW,
+            fontSize: 8.5, fontFace: DECK.body, border: { pt: 0.5, color: DECK.white },
+            valign: 'middle', rowH: 0.3, autoPage: true, autoPageRepeatHeader: true
+          });
+          deckFurniture(sm, false);
+        }
+
+        // Adjacency reasoning gets its own slide — a colour without a reason
+        // is an assertion.
+        var adj = rows.filter(function (r) { return r.adjacent && r.adjacent.toLowerCase() !== 'none'; });
+        if (adj.length) {
+          var sa = pptx.addSlide();
+          sa.background = { color: DECK.paper };
+          sa.addText(T().deckAdjacent, {
+            x: 0.5, y: 0.6, w: 10, h: 0.5, fontSize: 26, bold: true,
+            color: DECK.ink, fontFace: DECK.head
+          });
+          sa.addText(T().deckAdjacentSub, {
+            x: 0.5, y: 1.12, w: 11.5, h: 0.4, fontSize: 11,
+            color: DECK.inkSoft, fontFace: DECK.body
+          });
+          sa.addTable(
+            adj.slice(0, 14).map(function (r) {
+              return [
+                { text: r.name.replace(/\.(docx|pdf)$/i, ''), options: { bold: true, color: DECK.ink } },
+                { text: r.adjacent, options: { color: DECK.inkSoft } }
+              ];
+            }),
+            { x: 0.5, y: 1.7, w: 12.3, colW: [3.2, 9.1], fontSize: 10, fontFace: DECK.body,
+              border: { pt: 0.5, color: DECK.rule }, valign: 'middle', rowH: 0.32, autoPage: true }
+          );
+          deckFurniture(sa, false);
+        }
+      }
+
+      // ---- Glossary ----
+      if (gloss.length) {
+        var perSlide = 8;
+        for (var g = 0; g < gloss.length; g += perSlide) {
+          var chunk = gloss.slice(g, g + perSlide);
+          var sg = pptx.addSlide();
+          sg.background = { color: DECK.white };
+          var gpart = gloss.length > perSlide
+            ? ' (' + (Math.floor(g / perSlide) + 1) + '/' + Math.ceil(gloss.length / perSlide) + ')'
+            : '';
+          sg.addText(T().deckGlossary + gpart, {
+            x: 0.5, y: 0.6, w: 10, h: 0.5, fontSize: 26, bold: true,
+            color: DECK.ink, fontFace: DECK.head
+          });
+          sg.addText(T().deckGlossarySub, {
+            x: 0.5, y: 1.12, w: 11.5, h: 0.3, fontSize: 11,
+            color: DECK.inkSoft, fontFace: DECK.body
+          });
+          sg.addTable(
+            [[
+              { text: T().deckTerm, options: { bold: true, color: DECK.inkSoft } },
+              { text: T().deckMeans, options: { bold: true, color: DECK.inkSoft } },
+              { text: T().deckWhy, options: { bold: true, color: DECK.inkSoft } }
+            ]].concat(chunk.map(function (item) {
+              return [
+                { text: item.term, options: { bold: true, color: DECK.teal } },
+                { text: item.what, options: { color: DECK.ink } },
+                { text: item.why, options: { color: DECK.inkSoft, italic: true } }
+              ];
+            })),
+            { x: 0.5, y: 1.65, w: 12.3, colW: [2.2, 5.9, 4.2], fontSize: 10,
+              fontFace: DECK.body, border: { pt: 0.5, color: DECK.rule },
+              valign: 'top', rowH: 0.45, autoPage: true, autoPageRepeatHeader: true }
+          );
+          deckFurniture(sg, false);
+        }
+      }
+
+      // ---- Method and limits ----
+      var sz = pptx.addSlide();
+      sz.background = { color: DECK.ink };
+      sz.addText(T().deckMethod, {
+        x: 0.9, y: 0.9, w: 10, h: 0.6, fontSize: 28, bold: true,
+        color: DECK.white, fontFace: DECK.head
+      });
+      T().deckMethodPoints.forEach(function (pt, i) {
+        sz.addText(pt, {
+          x: 0.9, y: 1.8 + i * 0.82, w: 11.4, h: 0.7, fontSize: 12.5,
+          color: 'C7D2D0', fontFace: DECK.body, lineSpacing: 17, valign: 'top'
+        });
+      });
+      deckFurniture(sz, true);
+
+      return pptx.writeFile({ fileName: T().deckFilename }).then(function () {
+        btn.disabled = false;
+        btn.textContent = origLabel;
+      });
+    }).catch(function (err) {
+      console.error('Deck export failed:', err);
+      btn.disabled = false;
+      btn.textContent = origLabel;
+      showError(T().errDeck);
+    });
+  }
+
+  // ---------- Batch screening ----------
+  // Ranking many CVs against a brief. Two deliberate constraints:
+  //
+  //   1. It ranks and explains; it never rejects. Everyone stays on the list
+  //      with a score and a reason, so a human decides. Under the EU AI Act,
+  //      AI used to screen or rank job applicants is high-risk, and meaningful
+  //      human oversight is not optional.
+  //   2. Reading 100 CVs is genuinely expensive. The cost is shown before
+  //      anything starts, not discovered afterwards.
+
+  var batchFiles = [];        // { name, text, chars }
+  var batchResults = [];      // { name, score, why, concern }
+  var BATCH_SIZE = 5;         // CVs per screening call
+  var SCREEN_CHAR_CAP = 6000; // per CV, for the ranking pass only
+
+  function batchCostEstimate() {
+    var chars = batchFiles.reduce(function (n, f) {
+      return n + Math.min(f.text.length, SCREEN_CHAR_CAP);
+    }, 0);
+    var brief = ($('batch-brief').value || '').length;
+    var calls = Math.ceil(batchFiles.length / BATCH_SIZE);
+    var screenIn = Math.ceil(chars / 4) + calls * (Math.ceil(brief / 4) + 400);
+    var screenOut = batchFiles.length * 60;
+    return { screen: screenIn + screenOut, calls: calls };
+  }
+
+  function updateBatchCost() {
+    var el = $('batch-cost');
+    if (!batchFiles.length || !$('batch-brief').value.trim()) { el.textContent = ''; return; }
+    var e = batchCostEstimate();
+    var n = parseInt($('shortlist-size').value, 10);
+    var tailorEach = 2400;
+    el.textContent = T().batchCost(batchFiles.length, fmtTokens(e.screen), n, fmtTokens(n * tailorEach));
+  }
+
+  function renderBatchList() {
+    var list = $('batch-list');
+    list.innerHTML = '';
+    if (!batchFiles.length) { $('batch-readnote').textContent = ''; return; }
+    batchFiles.slice(0, 8).forEach(function (f) {
+      var row = document.createElement('p');
+      row.className = 'batch-file';
+      row.textContent = f.name;
+      list.appendChild(row);
+    });
+    if (batchFiles.length > 8) {
+      var more = document.createElement('p');
+      more.className = 'batch-file more';
+      more.textContent = T().batchMore(batchFiles.length - 8);
+      list.appendChild(more);
+    }
+    $('batch-readnote').textContent = T().batchLoaded(batchFiles.length);
+    updateBatchCost();
+  }
+
+  function addBatchFiles(fileList) {
+    var files = Array.prototype.slice.call(fileList);
+    var readable = files.filter(function (f) {
+      var n = f.name.toLowerCase();
+      return n.endsWith('.pdf') || n.endsWith('.docx');
+    });
+    var skipped = files.length - readable.length;
+    if (!readable.length) {
+      $('batch-readnote').textContent = T().batchNoneReadable;
+      return;
+    }
+
+    var done = 0, failed = 0;
+    $('batch-readnote').textContent = T().batchReading(0, readable.length);
+
+    var next = function (i) {
+      if (i >= readable.length) {
+        renderBatchList();
+        var msgs = [T().batchLoaded(batchFiles.length)];
+        if (failed) msgs.push(T().batchUnreadable(failed));
+        if (skipped) msgs.push(T().batchSkipped(skipped));
+        $('batch-readnote').textContent = msgs.join(' \u00b7 ');
+        return;
+      }
+      readAnyFile(readable[i], function (text) {
+        batchFiles.push({ name: readable[i].name, text: text });
+        done++;
+        $('batch-readnote').textContent = T().batchReading(done, readable.length);
+        next(i + 1);
+      }, function () {
+        failed++;
+        next(i + 1);
+      });
+    };
+    next(0);
+  }
+
+  function parseScreenLines(text, batch) {
+    // Expected: "1 | 72 | reason | concern" per line.
+    var rows = [];
+    text.split(/\n/).forEach(function (line) {
+      var parts = line.split('|').map(function (s) { return s.trim(); });
+      if (parts.length < 3) return;
+      var idx = parseInt(parts[0].replace(/[^0-9]/g, ''), 10);
+      var score = parseInt(parts[1].replace(/[^0-9]/g, ''), 10);
+      if (!Number.isFinite(idx) || !Number.isFinite(score)) return;
+      var f = batch[idx - 1];
+      if (!f) return;
+      rows.push({
+        name: f.name,
+        text: f.text,
+        score: Math.max(0, Math.min(100, score)),
+        why: parts[2] || '',
+        concern: parts[3] || '',
+        coverage: parts[4] || '',
+        adjacent: parts[5] || ''
+      });
+    });
+    return rows;
+  }
+
+  function screenBatch(brief) {
+    var chunks = [];
+    for (var i = 0; i < batchFiles.length; i += BATCH_SIZE) {
+      chunks.push(batchFiles.slice(i, i + BATCH_SIZE));
+    }
+
+    var results = [];
+    var runChunk = function (n) {
+      if (n >= chunks.length) return Promise.resolve(results);
+
+      var chunk = chunks[n];
+      var body = chunk.map(function (f, j) {
+        return '<cv id="' + (j + 1) + '">\n' + f.text.slice(0, SCREEN_CHAR_CAP) + '\n</cv>';
+      }).join('\n\n');
+
+      var reqBlock = requirements.length
+        ? '<requirements>\n' + requirements.map(function (r, i) { return (i + 1) + '. ' + r; }).join('\n') + '\n</requirements>\n\n'
+        : '';
+
+      var p = 'Score each CV below against the brief.\n\n' +
+        '<role_brief>\n' + brief + '\n</role_brief>\n\n' + reqBlock + body + '\n\n' +
+        'For each CV output exactly one line, in this format and nothing else:\n' +
+        (requirements.length
+          ? 'id | score | why | concern | coverage | adjacent\n\n'
+          : 'id | score | why | concern\n\n') +
+        'score is 0-100 for how well the CV evidences the brief\u2019s stated requirements.\n' +
+        'why is under 15 words, naming the specific requirements this CV evidences.\n' +
+        'concern is under 15 words, naming the most significant requirement it does not evidence. Write "none" if there is nothing significant.\n' +
+        (requirements.length
+          ? 'coverage is one letter per requirement above, in the same order, with no separators \u2014 ' +
+            requirements.length + ' letters exactly. M if the CV clearly evidences it. A if the CV evidences something close enough that this person could do the work \u2014 a neighbouring language, an equivalent tool, the same standard under another name. N if the CV does not evidence it at all.\n' +
+            'Use A sparingly and only where the transfer is genuine. Different experience in the same broad field is not adjacency.\n' +
+            'adjacent explains every A you gave, under 20 words total, as "requirement: what they have instead". Write "none" if you gave no A.\n\n'
+          : '\n') +
+        'Score only on evidence in the CV against the requirements in the brief. Do not score on how well written the CV is, which employers are named, where someone studied, how long they have worked, or anything about the person that the brief did not ask for. If a requirement is simply not mentioned, that is missing evidence, not a negative judgement of the candidate.\n' +
+        'Output one line per CV, ' + chunk.length + ' lines total. No preamble, no headers, no commentary.';
+
+      updateBatchProgress(n * BATCH_SIZE, batchFiles.length, T().batchScreening);
+
+      return callClaude(p, 1500).then(function (text) {
+        results = results.concat(parseScreenLines(text, chunk));
+        return runChunk(n + 1);
+      });
+    };
+
+    return runChunk(0);
+  }
+
+  function updateBatchProgress(done, total, label) {
+    var wrap = $('batch-progress');
+    wrap.style.display = 'block';
+    var pct = total ? Math.round((done / total) * 100) : 0;
+    $('batch-progress-bar').style.width = pct + '%';
+    $('batch-progress-label').textContent = label + ' ' + Math.min(done, total) + '/' + total;
+  }
+
+  function renderRanking(rows, brief) {
+    var out = $('batch-output');
+    out.innerHTML = '';
+    var n = parseInt($('shortlist-size').value, 10);
+
+    rows.sort(function (a, b) { return b.score - a.score; });
+
+    var zone = makeZone(T().zoneRanked);
+    var lead = document.createElement('p');
+    lead.className = 'ask-lead';
+    lead.textContent = T().rankedLead(rows.length, n);
+    zone.appendChild(lead);
+
+    var selected = {};
+    rows.forEach(function (r, i) { if (i < n) selected[r.name] = true; });
+
+    rows.forEach(function (r, i) {
+      var row = document.createElement('div');
+      row.className = 'rank-row' + (i < n ? ' short' : '');
+
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !!selected[r.name];
+      cb.addEventListener('change', function () {
+        selected[r.name] = cb.checked;
+        syncTailorBtn();
+      });
+      row.appendChild(cb);
+
+      var sc = document.createElement('span');
+      sc.className = 'rank-score';
+      sc.textContent = r.score;
+      sc.style.color = r.score >= 75 ? 'var(--accent)' : r.score >= 50 ? 'var(--amber)' : 'var(--ink-faint)';
+      row.appendChild(sc);
+
+      var mid = document.createElement('div');
+      mid.className = 'rank-mid';
+      var nm = document.createElement('p');
+      nm.className = 'rank-name';
+      nm.textContent = r.name;
+      mid.appendChild(nm);
+      var why = document.createElement('p');
+      why.className = 'rank-why';
+      why.textContent = r.why + (r.concern && r.concern.toLowerCase() !== 'none' ? ' \u2014 ' + r.concern : '');
+      mid.appendChild(why);
+      row.appendChild(mid);
+
+      zone.appendChild(row);
+    });
+
+    var exportRow = document.createElement('div');
+    exportRow.className = 'sec-actions';
+    exportRow.style.paddingTop = '16px';
+    var deckBtn = document.createElement('button');
+    deckBtn.type = 'button';
+    deckBtn.className = 'ghost';
+    deckBtn.textContent = T().deckExport;
+    deckBtn.addEventListener('click', function () {
+      exportDeck(rows, brief, deckBtn);
+    });
+    exportRow.appendChild(deckBtn);
+    zone.appendChild(exportRow);
+
+    var deckNote = document.createElement('p');
+    deckNote.className = 'note';
+    deckNote.textContent = T().deckExportNote;
+    zone.appendChild(deckNote);
+
+    var stepTwo = document.createElement('p');
+    stepTwo.className = 'step-tag step-two';
+    stepTwo.textContent = T().stepTwo;
+    zone.appendChild(stepTwo);
+
+    var tailorBtn = document.createElement('button');
+    tailorBtn.className = 'primary';
+    zone.appendChild(tailorBtn);
+
+    var tailorNote = document.createElement('p');
+    tailorNote.className = 'note';
+    tailorNote.style.textAlign = 'center';
+    zone.appendChild(tailorNote);
+
+    // Nothing is tailored until this is clicked, and the cost of clicking it
+    // is on the button rather than discovered afterwards.
+    function syncTailorBtn() {
+      var count = Object.keys(selected).filter(function (k) { return selected[k]; }).length;
+      tailorBtn.textContent = T().tailorSelected(count);
+      tailorBtn.disabled = count === 0;
+      tailorNote.textContent = count
+        ? T().tailorNote(count, fmtTokens(count * 2400))
+        : T().tailorNone;
+    }
+    syncTailorBtn();
+
+    out.appendChild(zone);
+
+    tailorBtn.addEventListener('click', function () {
+      var chosen = rows.filter(function (r) { return selected[r.name]; });
+      if (!chosen.length) return;
+      tailorBtn.disabled = true;
+      tailorSelected(chosen, brief, out);
+    });
+  }
+
+  function tailorSelected(chosen, brief, out) {
+    var zone = makeZone(T().zoneTailored);
+    out.appendChild(zone);
+
+    var run = function (i) {
+      if (i >= chosen.length) {
+        updateBatchProgress(chosen.length, chosen.length, T().batchTailoring);
+        setTimeout(function () { $('batch-progress').style.display = 'none'; }, 800);
+        return;
+      }
+      updateBatchProgress(i, chosen.length, T().batchTailoring);
+
+      var cand = chosen[i];
+      lastCandidateCv = cand.text;
+      lastBrief = brief;
+
+      return callClaude(buildPrompt(cand.text, brief), 4000).then(function (text) {
+        var parts = parseSections(text, KEYS);
+        var d = document.createElement('details');
+        d.className = 'sec';
+        var s = document.createElement('summary');
+        s.textContent = cand.name + '  \u00b7  ' + cand.score;
+        d.appendChild(s);
+
+        var inner = document.createElement('div');
+        inner.style.paddingBottom = '10px';
+        if (parts['CONFIDENCE']) {
+          inner.appendChild(makeSection(T().secConfidence, parts['CONFIDENCE'], { confidence: true }));
+        }
+        if (parts['FORMATTED CV']) {
+          inner.appendChild(makeSection(T().secFormatted, parts['FORMATTED CV'],
+            { open: true, pdf: cand.name.replace(/\.(pdf|docx)$/i, '') + '.pdf', templates: true, editable: true }));
+        }
+        if (parts['SUBMISSION NOTE']) inner.appendChild(makeSection(T().secNote, parts['SUBMISSION NOTE'], { editable: true }));
+        if (parts['RISKS']) inner.appendChild(makeSection(T().secRisks, parts['RISKS']));
+        if (parts['GLOSSARY'] &&
+            parts['GLOSSARY'].toLowerCase().indexOf('nothing that needs explaining') !== 0) {
+          inner.appendChild(makeSection(T().secGlossary, parts['GLOSSARY']));
+        }
+        if (!inner.children.length) inner.appendChild(makeSection(T().secFull, text));
+        d.appendChild(inner);
+        zone.appendChild(d);
+
+        return run(i + 1);
+      }).catch(function () {
+        var p = document.createElement('p');
+        p.className = 'msg err';
+        p.textContent = cand.name + ' \u2014 ' + T().errRequest;
+        zone.appendChild(p);
+        return run(i + 1);
+      });
+    };
+    run(0);
+  }
+
+  function setMode(next) {
+    var one = next === 'one';
+    $('mode-one').classList.toggle('on', one);
+    $('mode-many').classList.toggle('on', !one);
+    $('mode-one').setAttribute('aria-pressed', one ? 'true' : 'false');
+    $('mode-many').setAttribute('aria-pressed', one ? 'false' : 'true');
+    $('one-panel').style.display = one ? 'block' : 'none';
+    $('batch-panel').style.display = one ? 'none' : 'block';
+  }
+
+  // ---------- Cost and progress ----------
+  function updateCost() {
+    if (!candEl.value.trim() || !briefEl.value.trim()) { costEl.textContent = ''; return; }
+    var input = Math.ceil((candEl.value.length + briefEl.value.length + templateText.length) / 4) + 700;
+    costEl.textContent = T().costLine(fmtTokens(input + 1650));
+  }
+
+  var timer = null;
+  function startTimer() {
+    stepsEl.style.display = 'block';
+    var started = Date.now();
+    $('elapsed-note').textContent = T().waitNote;
+    var tick = function () {
+      var secs = Math.floor((Date.now() - started) / 1000);
+      var mins = Math.floor(secs / 60), rem = secs % 60;
+      $('elapsed-label').textContent = T().working + ' ' +
+        (mins > 0 ? mins + ':' + (rem < 10 ? '0' : '') + rem : secs + 's');
+      if (secs === 75) $('elapsed-note').textContent = T().waitLong;
+    };
+    tick();
+    timer = setInterval(tick, 1000);
+  }
+  function stopTimer() { if (timer) { clearInterval(timer); timer = null; } stepsEl.style.display = 'none'; }
+
+  // ---------- Language ----------
+  function applyLanguage() {
+    var t = T();
+    var set = function (id, v) { var el = $(id); if (el) el.textContent = v; };
+    set('t-title', t.title); set('t-sub', t.sub);
+    set('t-tpllabel', t.tpllabel); set('t-tplprompt', t.tplprompt); set('t-tplnote', t.tplnote);
+    set('t-candlabel', t.candlabel); set('t-brieflabel', t.brieflabel);
+    set('t-privacy', t.privacy);
+    set('mode-one', t.modeOne); set('mode-many', t.modeMany);
+    set('t-batchlabel', t.batchlabel); set('t-batchprompt', t.batchprompt);
+    set('t-batchbrieflabel', t.batchbrieflabel); set('t-shortlistlabel', t.shortlistlabel);
+    set('t-oversighttitle', t.oversightTitle); set('t-oversightbody', t.oversightBody);
+    set('batch-pick', isTouch ? t.pickfileTouch : t.pickfile);
+    var gb = $('go-batch'); if (gb) gb.textContent = t.goBatch;
+    var bb = $('batch-brief'); if (bb) bb.placeholder = t.briefph;
+    updateBatchCost();
+    set('tpl-pick', isTouch ? t.pickfileTouch : t.pickfile);
+    set('cand-pick', isTouch ? t.pickfileTouch : t.pickfile);
+    set('cand-hint', t.dzhint);
+    goBtn.textContent = t.go;
+    candEl.placeholder = isTouch ? t.candphTouch : t.candph;
+    briefEl.placeholder = t.briefph;
+    if ($('tpl-saved').textContent) $('tpl-saved').textContent = t.saved;
+    showTemplate();
+    updateCost();
+  }
+
+  function setLang(next) {
+    if (lang === next) return;
+    lang = next;
+    langEn.classList.toggle('on', next === 'en');
+    langSv.classList.toggle('on', next === 'sv');
+    langEn.setAttribute('aria-pressed', next === 'en' ? 'true' : 'false');
+    langSv.setAttribute('aria-pressed', next === 'sv' ? 'true' : 'false');
+    applyLanguage();
+    if (window.storage) window.storage.set('cs-lang', next, false).catch(function () {});
+  }
+
+  // ---------- Wiring ----------
+  tplPick.addEventListener('click', function () { tplFile.click(); });
+  tplFile.addEventListener('change', function () {
+    if (tplFile.files && tplFile.files[0]) loadTemplate(tplFile.files[0]);
+    tplFile.value = '';
+  });
+  $('tpl-clear').addEventListener('click', function () {
+    templateText = ''; templateName = '';
+    showTemplate(); updateCost();
+    $('tpl-saved').textContent = '';
+    if (window.storage) window.storage.delete('cs-template', false).catch(function () {});
+  });
+  candPick.addEventListener('click', function () { candFile.click(); });
+  candFile.addEventListener('change', function () {
+    if (candFile.files && candFile.files[0]) loadCandidate(candFile.files[0]);
+    candFile.value = '';
+  });
+  dragWire(tplZone, loadTemplate);
+  dragWire(candZone, loadCandidate);
+
+  ['input', 'change'].forEach(function (ev) {
+    candEl.addEventListener(ev, updateCost);
+    briefEl.addEventListener(ev, updateCost);
+  });
+  langEn.addEventListener('click', function () { setLang('en'); });
+  langSv.addEventListener('click', function () { setLang('sv'); });
+
+  goBtn.addEventListener('click', function () {
+    clearError();
+    var cand = candEl.value.trim(), brief = briefEl.value.trim();
+    if (!cand) { showError(T().errNoCand); return; }
+    if (!brief) { showError(T().errNoBrief); return; }
+
+    lastCandidateCv = cand;
+    lastBrief = brief;
+
+    goBtn.disabled = true;
+    outputEl.innerHTML = '';
+    startTimer();
+
+    callClaude(buildPrompt(cand, brief), 4000).then(function (text) {
+      stopTimer();
+      goBtn.disabled = false;
+      candEl.value = ''; briefEl.value = '';
+      updateCost();
+      render(text);
+    }).catch(function () {
+      stopTimer();
+      goBtn.disabled = false;
+      showError(T().errRequest);
+    });
+  });
+
+  $('mode-one').addEventListener('click', function () { setMode('one'); });
+  $('mode-many').addEventListener('click', function () { setMode('many'); });
+  $('batch-pick').addEventListener('click', function () { $('batch-file').click(); });
+  $('batch-file').addEventListener('change', function () {
+    if (this.files && this.files.length) addBatchFiles(this.files);
+    this.value = '';
+  });
+  dragWire($('batch-dropzone'), null);
+  $('batch-dropzone').addEventListener('drop', function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files;
+    if (f && f.length) addBatchFiles(f);
+  });
+  ['input', 'change'].forEach(function (ev) {
+    $('batch-brief').addEventListener(ev, updateBatchCost);
+    $('shortlist-size').addEventListener(ev, updateBatchCost);
+  });
+
+  $('go-batch').addEventListener('click', function () {
+    var err = $('batch-error');
+    err.style.display = 'none';
+    var brief = $('batch-brief').value.trim();
+    if (!batchFiles.length) { err.textContent = T().errNoBatch; err.style.display = 'block'; return; }
+    if (!brief) { err.textContent = T().errNoBatchBrief; err.style.display = 'block'; return; }
+
+    var btn = $('go-batch');
+    btn.disabled = true;
+    $('batch-output').innerHTML = '';
+    updateBatchProgress(0, batchFiles.length, T().batchScreening);
+
+    extractRequirements(brief).then(function (reqs) {
+      requirements = reqs;
+      return screenBatch(brief);
+    }).then(function (rows) {
+      btn.disabled = false;
+      $('batch-progress').style.display = 'none';
+      if (!rows.length) { err.textContent = T().errRequest; err.style.display = 'block'; return; }
+      renderRanking(rows, brief);
+      var matrix = renderMatrix(rows.slice().sort(function (a, b) { return b.score - a.score; }));
+      if (matrix) $('batch-output').appendChild(matrix);
+    }).catch(function () {
+      btn.disabled = false;
+      $('batch-progress').style.display = 'none';
+      err.textContent = T().errRequest;
+      err.style.display = 'block';
+    });
+  });
+
+  // ---------- Boot ----------
+  if (window.storage) {
+    window.storage.get('cs-template', false).then(function (r) {
+      if (r && r.value) {
+        try {
+          var t = JSON.parse(r.value);
+          templateText = t.text || ''; templateName = t.name || '';
+          $('tpl-saved').textContent = T().saved;
+          showTemplate();
+        } catch (e) {}
+      }
+    }).catch(function () {});
+    window.storage.get('cs-lang', false).then(function (r) {
+      if (r && r.value === 'sv') setLang('sv');
+    }).catch(function () {});
+  }
+  applyLanguage();
+})();
+</script>

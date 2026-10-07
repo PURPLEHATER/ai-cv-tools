@@ -1,0 +1,14 @@
+{
+  "name": "jobtailor-beta",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Job Tailor paid beta — licence-gated, credit-metered, stores no personal data.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "keys": "node scripts/keys.js",
+    "test": "node test/backend.test.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {}
+}
