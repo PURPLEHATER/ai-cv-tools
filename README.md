@@ -1,8 +1,12 @@
 # AI CV Tools
 
-Two browser tools for CV work, built by John Mawdsley in 2026 by directing Claude (Anthropic) through a long series of design, build, test and fix cycles. I set the requirements, made the product decisions, reported bugs from real use and decided what shipped. Claude wrote the code and the tests to my specification.
+AI-assisted CV tailoring and candidate screening. One tool helps a job seeker tailor their CV to a specific posting. The other helps a consultancy or recruiter screen a batch of CVs against a brief, show the evidence for each requirement, and hand a stakeholder a deck they can read without a technical background.
 
-This repository is here as a record of that work.
+Built by John Mawdsley in 2026 by directing Claude (Anthropic) through a long series of design, build, test and fix cycles. I set the requirements, made the product decisions, reported bugs from real use and decided what shipped. Claude wrote the code and the tests to my specification. How that worked in practice is written up in [How I build with AI](docs/how-i-build-with-ai.md).
+
+![Requirements matrix from a screening run on fictional candidates](assets/screening-matrix.png)
+
+*CV Screen output: twelve fictional candidates checked against six requirements. Green means the CV shows evidence, amber means transferable experience the tool had to justify in writing, red means the CV does not mention it.*
 
 ## What is in it
 
@@ -17,6 +21,8 @@ Each tool is a single self-contained HTML file. Open it as a Claude artifact and
 
 ## Job Tailor features
 
+<img src="assets/job-tailor.png" alt="Job Tailor input screen" width="480">
+
 - Drag and drop a CV as PDF or Word, paste a job posting or link
 - Role confirmation step, so the tool says which job it thinks you are applying for before it writes anything (added after it once tailored a CV to the wrong Volvo role)
 - Tailored CV with uneven detail across roles, so it reads like a person wrote it rather than a template
@@ -30,6 +36,10 @@ Each tool is a single self-contained HTML file. Open it as a Claude artifact and
 - A confidence section that says what the tool is unsure of
 
 ## CV Screen features
+
+<img src="assets/cv-screen.png" alt="CV Screen input screen" width="480">
+
+![Ranked shortlist slide from the PowerPoint export](assets/screening-ranking.png)
 
 - Upload a company CV template, a brief and a batch of CVs
 - Screens in batches of five, ranks candidates and shows a colour-coded requirements matrix
